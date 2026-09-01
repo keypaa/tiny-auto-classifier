@@ -146,8 +146,13 @@ def build_trainer(cfg: TrainingConfig) -> Trainer:
     prec = _pick_precision(cfg)
     use_bf16 = prec == "bf16"
     use_fp16 = prec == "fp16"
-    # 8bit optimizer only if bitsandbytes available; Trainer handles fallback
+    # 8bit optimizer only if bitsandbytes available and not conflicting with fp16 scaler
+    # T4 fp16 + adamw_8bit + GradScaler + clip_grad_norm triggers
+    #   ValueError: Attempting to unscale FP16 gradients / BFloat16 not implemented
     optim = "adamw_8bit" if cfg.optimizer == "adamw_8bit" else "adamw_torch"
+    if (use_fp16 or use_bf16) and optim == "adamw_8bit":
+        print(f"{prec} + adamw_8bit is broken on this torch/accelerate (scaler) — falling back to adamw_torch")
+        optim = "adamw_torch"
     try:
         import bitsandbytes  # noqa: F401
     except ImportError:
