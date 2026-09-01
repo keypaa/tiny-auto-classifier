@@ -1,0 +1,17 @@
+{
+  "name": "Qwen/Qwen3-0.6B",
+  "params_m": "600",
+  "tier": "T4",
+  "arch": "Qwen3 decoder",
+  "native_ctx": 32768,
+  "tested_ctx": "32768 native, 131072 via YARN+DCA",
+  "attention": "GQA 16/8",
+  "pos_enc": "RoPE ABF 1M + YARN+DCA",
+  "layers": 28,
+  "vocab": 151000,
+  "license": "Apache2",
+  "classif": "CausalLM",
+  "onnx": true,
+  "cpu": "GGUF Q4 1.9GB",
+  "long_ctx_method": "32K YARN+DCA 4x"
+}

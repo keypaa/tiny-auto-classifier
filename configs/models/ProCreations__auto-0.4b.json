@@ -1,0 +1,17 @@
+{
+  "name": "ProCreations/auto-0.4b",
+  "params_m": "395.8",
+  "tier": "T3",
+  "arch": "ModernBERT-large encoder",
+  "native_ctx": 8192,
+  "tested_ctx": 65536,
+  "attention": "local 128 + global every 3rd (10/28)",
+  "pos_enc": "RoPE global 2.56M",
+  "layers": 28,
+  "vocab": 50368,
+  "license": "Apache2",
+  "classif": "SequenceClassification (2 labels)",
+  "onnx": "~8K limit (dense mask)",
+  "cpu": "PT flash_attn for 64K, PT INT8",
+  "long_ctx_method": "8K->64K fine-tune RoPE sweep"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "google/gemma-3-270m",
+  "params_m": "270",
+  "tier": "T2",
+  "arch": "decoder 5:1 local/global",
+  "native_ctx": 32768,
+  "tested_ctx": 32768,
+  "attention": "GQA + SW 1024",
+  "pos_enc": "RoPE base 1M global",
+  "layers": "? (5:1)",
+  "vocab": 256000,
+  "license": "Gemma",
+  "classif": "CausalLM",
+  "onnx": true,
+  "cpu": "ONNX+llama.cpp",
+  "long_ctx_method": "RoPE scaled"
+}
