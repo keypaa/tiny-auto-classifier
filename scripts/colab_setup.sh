@@ -8,6 +8,8 @@ python -c "import torch; print(torch.cuda.get_device_name(0) if torch.cuda.is_av
 
 # Lean deps only — transformers already on Colab, but pin to avoid breakage
 pip -q install "transformers>=4.40" "peft>=0.11" "accelerate>=0.30" "bitsandbytes>=0.43" "datasets>=2.19" "pyyaml" "psutil" --extra-index-url https://pypi.nvidia.com
+# ensure peft is actually importable (Colab sometimes has stale transformers)
+python -c "import peft; print(f'peft {peft.__version__} ok')" || pip -q install --no-deps peft
 
 # Flash-attn optional for ModernBERT 64K — try but don't fail (heavy)
 # pip install flash-attn --no-build-isolation  # uncomment only if needed; 10min build

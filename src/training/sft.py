@@ -146,9 +146,12 @@ def build_trainer(cfg: TrainingConfig) -> Trainer:
             print("bitsandbytes not installed — falling back to adamw_torch")
             optim = "adamw_torch"
 
-    # TrainingArguments — minimal, curriculum-aware
-    # effective batch = 8 (1*8) good for pilot; scale up later
-    args = TrainingArguments(
+    # TrainingArguments — minimal, curriculum-aware (compat for transformers 4.x and 5.x)
+    # warmup_ratio only in 4.44+ / 5.x, eval_strategy renamed in 5.x
+    import inspect as _inspect
+
+    _ta_params = set(_inspect.signature(TrainingArguments.__init__).parameters.keys())
+    _ta_kwargs: dict = dict(
         output_dir=cfg.output_dir,
         per_device_train_batch_size=cfg.per_device_batch,
         per_device_eval_batch_size=1,
@@ -156,12 +159,9 @@ def build_trainer(cfg: TrainingConfig) -> Trainer:
         num_train_epochs=cfg.epochs,
         learning_rate=cfg.lr,
         weight_decay=cfg.weight_decay,
-        warmup_ratio=cfg.warmup_ratio,
         logging_steps=cfg.logging_steps,
         save_steps=cfg.save_steps,
         save_total_limit=2,
-        eval_strategy="steps" if eval_ds else "no",
-        eval_steps=cfg.save_steps if eval_ds else None,
         bf16=use_bf16,
         fp16=use_fp16,
         optim=optim,
@@ -170,13 +170,22 @@ def build_trainer(cfg: TrainingConfig) -> Trainer:
         dataloader_pin_memory=False,  # T4 15GB RAM — pin wastes
         report_to="none",
         seed=cfg.seed,
-        # long context: don't truncate via trainer, we already did
         max_grad_norm=1.0,
-        # T4 12GB: avoid OOM from cache
         ddp_find_unused_parameters=False,
-        # save only LoRA adapters if peft
         remove_unused_columns=False,
     )
+    # warmup
+    if "warmup_ratio" in _ta_params:
+        _ta_kwargs["warmup_ratio"] = cfg.warmup_ratio
+    else:
+        # fallback: warmup_steps = ratio * steps per epoch (approx)
+        _ta_kwargs["warmup_steps"] = max(1, int(len(train_ds) // cfg.effective_batch * cfg.epochs * cfg.warmup_ratio))
+    # eval strategy name compat
+    _eval_key = "eval_strategy" if "eval_strategy" in _ta_params else "evaluation_strategy"
+    _ta_kwargs[_eval_key] = "steps" if eval_ds else "no"
+    if eval_ds:
+        _ta_kwargs["eval_steps"] = cfg.save_steps
+    args = TrainingArguments(**_ta_kwargs)
 
     def compute_metrics(eval_pred):
         # encoder: logits vs 0/1
