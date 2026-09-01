@@ -15,5 +15,6 @@ data/adversarial/*
 !*/.gitkeep
 experiments/*
 !experiments/.gitkeep
-reports/*
-!reports/.gitkeep
+# reports are versioned (roadmap §49) — keep md/json, ignore large binaries
+reports/*.bin
+reports/*.pt
