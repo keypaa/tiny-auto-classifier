@@ -1,0 +1,31 @@
+# Pilot SFT — T3 sweet spot (auto-0.4b encoder). Copy to pilot_t1.yaml / pilot_t4.yaml for ladder.
+# Fits Colab T4 12GB VRAM + 15GB RAM, batch=1, grad_accum=8, LoRA r16, checkpointing, fp16 (T4 has no bf16)
+model_id: ProCreations/auto-0.4b
+mode: encoder
+max_length: 8192  # start curriculum at 8K; step to 16384 then 27110 via --max-length flag
+train_file: data/raw/pilot_stub.jsonl
+val_file: null  # add data/validation/pilot_val.jsonl after split
+policy_path: prompts/original/policy.txt
+
+per_device_batch: 1
+grad_accum: 8  # effective 8
+epochs: 1
+lr: 2.0e-05
+weight_decay: 0.01
+warmup_ratio: 0.06
+optimizer: adamw_8bit
+precision: fp16  # T4: fp16; A100: change to bf16
+grad_checkpointing: true
+
+lora:
+  enabled: true
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules: null  # auto: ModernBERT -> [Wqkv, Wo, Wi]
+
+output_dir: models/checkpoints/pilot_t3_8k
+seed: 42
+num_workers: 2
+logging_steps: 10
+save_steps: 200

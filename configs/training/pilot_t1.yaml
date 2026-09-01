@@ -1,0 +1,26 @@
+# T1 — LFM2.5-230M decoder, 32K, causal (generates ALLOW / BLOCK:R17)
+model_id: LiquidAI/LFM2.5-230M
+mode: decoder
+max_length: 8192
+train_file: data/raw/pilot_stub.jsonl
+policy_path: prompts/original/policy.txt
+per_device_batch: 1
+grad_accum: 8
+epochs: 1
+lr: 2.0e-05
+weight_decay: 0.01
+warmup_ratio: 0.06
+optimizer: adamw_8bit
+precision: fp16
+grad_checkpointing: true
+lora:
+  enabled: true
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules: null  # auto -> [q_proj, k_proj, v_proj]
+output_dir: models/checkpoints/pilot_t1_8k
+seed: 42
+num_workers: 2
+logging_steps: 10
+save_steps: 200
