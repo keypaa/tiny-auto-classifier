@@ -75,6 +75,9 @@ def build_trainer(cfg: TrainingConfig) -> Trainer:
         except ImportError:
             print("WARNING: flash_attn not installed — ModernBERT >8K will materialize dense mask and OOM on T4. Install flash_attn or stay at 8K.")
 
+    # precision for model dtype — must match TrainingArguments scaler (T4 fp16, not bf16)
+    _prec = _pick_precision(cfg)
+    _dtype = torch.bfloat16 if _prec == "bf16" else torch.float16 if _prec == "fp16" else torch.float32
     # model
     if cfg.mode == "encoder":
         config = AutoConfig.from_pretrained(cfg.model_id, trust_remote_code=True)
@@ -83,11 +86,11 @@ def build_trainer(cfg: TrainingConfig) -> Trainer:
         config.id2label = {0: "approve", 1: "deny"}
         config.label2id = {"approve": 0, "deny": 1}
         model = AutoModelForSequenceClassification.from_pretrained(
-            cfg.model_id, config=config, trust_remote_code=True, torch_dtype="auto"
+            cfg.model_id, config=config, trust_remote_code=True, dtype=_dtype
         )
     else:
         model = AutoModelForCausalLM.from_pretrained(
-            cfg.model_id, trust_remote_code=True, torch_dtype="auto"
+            cfg.model_id, trust_remote_code=True, dtype=_dtype
         )
         # resize if needed (Gemma large vocab)
         if len(tok) != model.get_input_embeddings().weight.shape[0]:
