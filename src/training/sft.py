@@ -120,10 +120,16 @@ def build_trainer(cfg: TrainingConfig) -> Trainer:
             )
             model = get_peft_model(model, peft_cfg)
             model.print_trainable_parameters()
-        except ImportError:
-            print("peft not installed — training full model (will OOM at 27K on T4)")
+        except ImportError as e:
+            print(f"peft import failed ({e}) — training full model (will OOM at 27K on T4)")
+            import traceback
+
+            traceback.print_exc()
         except Exception as e:
             print(f"LoRA setup failed ({target}): {e} — falling back to full")
+            import traceback
+
+            traceback.print_exc()
 
     # collator
     if cfg.mode == "encoder":
