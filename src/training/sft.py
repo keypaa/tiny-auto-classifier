@@ -202,15 +202,23 @@ def build_trainer(cfg: TrainingConfig) -> Trainer:
             # eval_pred is (logits, labels) with -100 masked — Trainer doesn't decode, so approximate
             return {}
 
-    trainer = Trainer(
+    # Trainer compat: 4.x uses tokenizer=, 5.x uses processing_class=
+    import inspect as _inspect2
+
+    _trainer_params = set(_inspect2.signature(Trainer.__init__).parameters.keys())
+    _trainer_kwargs = dict(
         model=model,
         args=args,
         train_dataset=train_ds,
         eval_dataset=eval_ds,
         data_collator=collator,
-        tokenizer=tok,
         compute_metrics=compute_metrics if eval_ds and cfg.mode == "encoder" else None,
     )
+    if "processing_class" in _trainer_params:
+        _trainer_kwargs["processing_class"] = tok
+    else:
+        _trainer_kwargs["tokenizer"] = tok
+    trainer = Trainer(**_trainer_kwargs)
     return trainer
 
 
