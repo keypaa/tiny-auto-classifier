@@ -36,10 +36,23 @@ def _auto_target_modules(model_id: str, mode: str) -> list[str]:
 
 def _pick_precision(cfg: TrainingConfig) -> str:
     # T4 (Turing) has fp16, not bf16. Try bf16 only if A100/H100.
+    # torch 2.8 broke fp16 GradScaler + clip_grad_norm on T4 (ValueError: Attempting to unscale FP16 gradients)
+    # so force fp32 for now on T4; 8K fits in 15GB, 27K will need fp16+no-clip later
+    import torch as _t
+
+    is_t4 = False
+    try:
+        if _t.cuda.is_available():
+            name = _t.cuda.get_device_name(0).lower()
+            is_t4 = "t4" in name
+    except Exception:
+        pass
+    if is_t4 and cfg.precision in ("fp16", "bf16"):
+        print(f"T4 detected with {cfg.precision} — torch {_t.__version__} scaler is broken, falling back to fp32 for 8K stub (fits 15GB)")
+        return "fp32"
     if cfg.precision == "bf16" and not torch.cuda.is_available():
         return "fp32"
     if cfg.precision == "bf16":
-        # torch.cuda.is_bf16_supported() exists in 2.0+
         try:
             if not torch.cuda.is_bf16_supported():
                 print("bf16 not supported on this GPU (T4) — falling back to fp16")
