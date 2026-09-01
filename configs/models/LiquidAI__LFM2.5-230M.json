@@ -1,0 +1,17 @@
+{
+  "name": "LiquidAI/LFM2.5-230M",
+  "params_m": "230",
+  "tier": "T1",
+  "arch": "hybrid decoder (8 conv+6 GQA)",
+  "native_ctx": 32768,
+  "tested_ctx": 32768,
+  "attention": "GQA+double-gated LIV conv",
+  "pos_enc": "RoPE",
+  "layers": 14,
+  "vocab": 65536,
+  "license": "LiquidAI permissive",
+  "classif": "CausalLM",
+  "onnx": true,
+  "cpu": "llama.cpp/ONNX INT4/INT8",
+  "long_ctx_method": "32K extension 19T tokens"
+}
