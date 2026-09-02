@@ -160,11 +160,11 @@ def build_trainer(cfg: TrainingConfig) -> Trainer:
             optim = "adamw_torch"
 
     # TrainingArguments — minimal, curriculum-aware (compat for transformers 4.x and 5.x)
-    # torch 2.8 fp16 GradScaler + clip_grad_norm is broken on T4 (unscale FP16) → disable clip for fp16
-    _max_grad_norm = 1.0
+    # torch 2.8 fp16 GradScaler + clip_grad_norm is broken on T4 (ValueError: unscale FP16)
+    # fix: set max_grad_norm=0 → Trainer skips clip (and thus unscale) for fp16, keeps fp16 speed
+    _max_grad_norm = 0 if use_fp16 else 1.0
     if use_fp16:
-        print("fp16 on T4 with torch 2.8 scaler broken for clip — disabling max_grad_norm (no clip) to keep fp16 speed")
-        _max_grad_norm = None  # Trainer will pass None → accelerate skips unscale+clip
+        print("fp16 on T4 with torch 2.8 scaler broken for clip — disabling clip (max_grad_norm=0) to keep fp16 speed")
     # warmup_ratio only in 4.44+ / 5.x, eval_strategy renamed in 5.x
     import inspect as _inspect
 
@@ -188,11 +188,10 @@ def build_trainer(cfg: TrainingConfig) -> Trainer:
         dataloader_pin_memory=False,  # T4 15GB RAM — pin wastes
         report_to="none",
         seed=cfg.seed,
+        max_grad_norm=_max_grad_norm,
         ddp_find_unused_parameters=False,
         remove_unused_columns=False,
     )
-    if _max_grad_norm is not None:
-        _ta_kwargs["max_grad_norm"] = _max_grad_norm
     # warmup
     if "warmup_ratio" in _ta_params:
         _ta_kwargs["warmup_ratio"] = cfg.warmup_ratio
