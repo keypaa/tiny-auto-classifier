@@ -36,20 +36,6 @@ def _auto_target_modules(model_id: str, mode: str) -> list[str]:
 
 def _pick_precision(cfg: TrainingConfig) -> str:
     # T4 (Turing) has fp16, not bf16. Try bf16 only if A100/H100.
-    # torch 2.8 broke fp16 GradScaler + clip_grad_norm on T4 (ValueError: Attempting to unscale FP16 gradients)
-    # so force fp32 for now on T4; 8K fits in 15GB, 27K will need fp16+no-clip later
-    import torch as _t
-
-    is_t4 = False
-    try:
-        if _t.cuda.is_available():
-            name = _t.cuda.get_device_name(0).lower()
-            is_t4 = "t4" in name
-    except Exception:
-        pass
-    if is_t4 and cfg.precision in ("fp16", "bf16"):
-        print(f"T4 detected with {cfg.precision} — torch {_t.__version__} scaler is broken, falling back to fp32 for 8K stub (fits 15GB)")
-        return "fp32"
     if cfg.precision == "bf16" and not torch.cuda.is_available():
         return "fp32"
     if cfg.precision == "bf16":
@@ -174,6 +160,11 @@ def build_trainer(cfg: TrainingConfig) -> Trainer:
             optim = "adamw_torch"
 
     # TrainingArguments — minimal, curriculum-aware (compat for transformers 4.x and 5.x)
+    # torch 2.8 fp16 GradScaler + clip_grad_norm is broken on T4 (unscale FP16) → disable clip for fp16
+    _max_grad_norm = 1.0
+    if use_fp16:
+        print("fp16 on T4 with torch 2.8 scaler broken for clip — disabling max_grad_norm (no clip) to keep fp16 speed")
+        _max_grad_norm = None  # Trainer will pass None → accelerate skips unscale+clip
     # warmup_ratio only in 4.44+ / 5.x, eval_strategy renamed in 5.x
     import inspect as _inspect
 
@@ -197,10 +188,11 @@ def build_trainer(cfg: TrainingConfig) -> Trainer:
         dataloader_pin_memory=False,  # T4 15GB RAM — pin wastes
         report_to="none",
         seed=cfg.seed,
-        max_grad_norm=1.0,
         ddp_find_unused_parameters=False,
         remove_unused_columns=False,
     )
+    if _max_grad_norm is not None:
+        _ta_kwargs["max_grad_norm"] = _max_grad_norm
     # warmup
     if "warmup_ratio" in _ta_params:
         _ta_kwargs["warmup_ratio"] = cfg.warmup_ratio
