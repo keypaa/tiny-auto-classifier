@@ -3,8 +3,8 @@
 model_id: ProCreations/auto-0.4b
 mode: encoder
 max_length: 8192  # start curriculum at 8K; step to 16384 then 27110 via --max-length flag
-train_file: data/raw/pilot_stub.jsonl
-val_file: null  # add data/validation/pilot_val.jsonl after split
+train_file: data/train/pilot_10k.jsonl
+val_file: data/validation/pilot_10k.jsonl
 policy_path: prompts/original/policy.txt
 
 per_device_batch: 1
