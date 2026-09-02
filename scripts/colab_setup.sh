@@ -6,10 +6,14 @@ echo "=== Colab setup T4 12GB ==="
 nvidia-smi || echo "no nvidia-smi (CPU fallback)"
 python -c "import torch; print(torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'CPU-only')"
 
+# Pin torch 2.5 for fp16 GradScaler (torch 2.8 breaks fp16 unscale on T4, see sft.py)
+# Keep fp16 65 TFLOPS ~1.5s/it; fp32 fallback is 206s/it
+pip -q install "torch==2.5.1" --index-url https://download.pytorch.org/whl/cu121 2>&1 | tail -n 3 || pip -q install "torch==2.5.0" --index-url https://download.pytorch.org/whl/cu121
 # Lean deps only — transformers already on Colab, but pin to avoid breakage
 pip -q install "transformers>=4.40" "peft>=0.11" "accelerate>=0.30" "bitsandbytes>=0.43" "datasets>=2.19" "pyyaml" "psutil" --extra-index-url https://pypi.nvidia.com
 # ensure peft is actually importable (Colab sometimes has stale transformers)
 python -c "import peft; print(f'peft {peft.__version__} ok')" || pip -q install --no-deps peft
+python -c "import torch; print(f'torch {torch.__version__} cuda {torch.version.cuda}')" 
 
 # Flash-attn optional for ModernBERT 64K — try but don't fail (heavy)
 # pip install flash-attn --no-build-isolation  # uncomment only if needed; 10min build

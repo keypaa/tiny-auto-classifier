@@ -35,13 +35,16 @@ def _auto_target_modules(model_id: str, mode: str) -> list[str]:
 
 
 def _pick_precision(cfg: TrainingConfig) -> str:
-    # T4 + torch 2.8 fp16 GradScaler is broken (_get_grad_norm calls unscale even with max_grad_norm=0)
-    # force fp32 for T4 smoke; real 27K will need torch==2.5 pin
+    # torch 2.8 broke fp16 scaler on T4, but 2.5 works — only force fp32 if still on 2.8+
     import torch as _t
 
     try:
-        if _t.cuda.is_available() and "t4" in _t.cuda.get_device_name(0).lower() and cfg.precision == "fp16":
-            print(f"T4 + {cfg.precision} scaler broken on torch {_t.__version__} — forcing fp32 for smoke (2048 fits, 8192 slow)")
+        ver = _t.__version__
+        major = int(ver.split(".")[0])
+        minor = int(ver.split(".")[1].split("+")[0])
+        is_28 = (major > 2) or (major == 2 and minor >= 8)
+        if is_28 and _t.cuda.is_available() and "t4" in _t.cuda.get_device_name(0).lower() and cfg.precision == "fp16":
+            print(f"T4 + {cfg.precision} scaler broken on torch {ver} — forcing fp32 (pin torch==2.5 for fp16)")
             return "fp32"
     except Exception:
         pass
