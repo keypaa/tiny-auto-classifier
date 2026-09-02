@@ -6,11 +6,10 @@ echo "=== Colab setup T4 12GB ==="
 nvidia-smi || echo "no nvidia-smi (CPU fallback)"
 python -c "import torch; print(torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'CPU-only')"
 
-# Pin torch 2.5 for fp16 GradScaler (torch 2.11+ breaks fp16 unscale on T4)
-# Must pin torchvision to match torch 2.5, else torchvision::nms error
-pip -q install "torch==2.5.1" "torchvision==0.20.1" "torchao==0.16.0" --index-url https://download.pytorch.org/whl/cu121 2>&1 | tail -n 5 || pip -q install "torch==2.5.1" --index-url https://download.pytorch.org/whl/cu121
-# Lean deps only — transformers already on Colab, but pin to avoid breakage
-pip -q install "transformers>=4.40" "peft>=0.11" "accelerate>=0.30" "bitsandbytes>=0.43" "datasets>=2.19" "pyyaml" "psutil" --extra-index-url https://pypi.nvidia.com
+# Keep Colab torch 2.11 (torchvision 0.26 matches), pin accelerate 0.34 to fix fp16 scaler (1.10 breaks unscale)
+pip -q install "accelerate==0.34.0" 2>&1 | tail -n 3
+# Lean deps only — transformers already on Colab, but pin to avoid breakage (keep accelerate 0.34)
+pip -q install "transformers>=4.40" "peft>=0.11" "bitsandbytes>=0.43" "datasets>=2.19" "pyyaml" "psutil" --extra-index-url https://pypi.nvidia.com
 # ensure peft is actually importable (Colab sometimes has stale transformers)
 python -c "import peft; print(f'peft {peft.__version__} ok')" || pip -q install --no-deps peft
 python -c "import torch; print(f'torch {torch.__version__} cuda {torch.version.cuda}')" 
