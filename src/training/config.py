@@ -48,6 +48,7 @@ class TrainingConfig:
     num_workers: int = 2  # Colab 4 cores → 2 is safe
     logging_steps: int = 10
     save_steps: int = 200
+    max_steps: int = -1  # -1 = full epoch; set 10 for smoke
 
     @classmethod
     def from_yaml(cls, path: str | Path) -> "TrainingConfig":
