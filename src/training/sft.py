@@ -192,6 +192,8 @@ def build_trainer(cfg: TrainingConfig) -> Trainer:
         ddp_find_unused_parameters=False,
         remove_unused_columns=False,
     )
+    if cfg.max_steps > 0:
+        _ta_kwargs["max_steps"] = cfg.max_steps
     # warmup
     if "warmup_ratio" in _ta_params:
         _ta_kwargs["warmup_ratio"] = cfg.warmup_ratio
