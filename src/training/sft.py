@@ -261,8 +261,13 @@ def train(cfg_path: str | Path) -> str:
     result = trainer.train()
     # save
     trainer.save_model(cfg.output_dir)
-    # also save tokenizer + config snapshot + metrics
-    trainer.tokenizer.save_pretrained(cfg.output_dir)
+    # also save tokenizer + config snapshot + metrics (compat 4.x/5.x)
+    _tok = getattr(trainer, "tokenizer", None) or getattr(trainer, "processing_class", None) or tok
+    if _tok:
+        try:
+            _tok.save_pretrained(cfg.output_dir)
+        except Exception as e:
+            print(f"tokenizer save failed: {e}")
     Path(cfg.output_dir, "trainer_state.json").write_text(json.dumps({"best": str(result)}, indent=2))
     print(f"Done → {cfg.output_dir}")
     return cfg.output_dir
