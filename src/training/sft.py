@@ -35,13 +35,24 @@ def _auto_target_modules(model_id: str, mode: str) -> list[str]:
 
 
 def _pick_precision(cfg: TrainingConfig) -> str:
-    # With torch 2.5 + matching torchvision/torchao (colab_setup.sh) fp16 works on T4
+    # T4 fp16 GradScaler is broken on torch 2.11 + accelerate 1.2-1.5 (_get_grad_norm unscale)
+    # Use bf16 on T4 (no GradScaler, no unscale) even though is_bf16_supported() is False — torch emulates bf16
+    try:
+        if torch.cuda.is_available() and "t4" in torch.cuda.get_device_name(0).lower() and cfg.precision == "fp16":
+            print(f"T4 + fp16 scaler broken — forcing bf16 (no scaler) on {torch.cuda.get_device_name(0)}")
+            return "bf16"
+    except Exception:
+        pass
     if cfg.precision == "bf16" and not torch.cuda.is_available():
         return "fp32"
     if cfg.precision == "bf16":
         try:
             if not torch.cuda.is_bf16_supported():
-                print("bf16 not supported on this GPU (T4) — falling back to fp16")
+                # still allow bf16 on T4 as emulation (slow but no scaler bug)
+                if torch.cuda.is_available() and "t4" in torch.cuda.get_device_name(0).lower():
+                    print("T4 bf16 emulated (no scaler) — keeping bf16 for fp16 workaround")
+                    return "bf16"
+                print("bf16 not supported on this GPU — falling back to fp16")
                 return "fp16"
         except Exception:
             return "fp16"
