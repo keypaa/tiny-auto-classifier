@@ -6,10 +6,10 @@ echo "=== Colab setup T4 12GB ==="
 nvidia-smi || echo "no nvidia-smi (CPU fallback)"
 python -c "import torch; print(torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'CPU-only')"
 
-# Keep Colab torch 2.11 (torchvision 0.26 matches), upgrade torchao for peft 0.20, pin accelerate 1.2 (1.10 breaks fp16 unscale, 0.34 too old)
+# Keep Colab torch 2.11 (torchvision 0.26 matches), upgrade torchao for peft 0.20, pin accelerate 1.5 (1.10 scaler broken, 0.34 too old, 1.2 missing keep_torch_compile)
 pip -q install "torchao>=0.16.0" --extra-index-url https://pypi.nvidia.com 2>&1 | tail -n 3 || echo "torchao upgrade optional"
-# Lean deps only — pin accelerate to 1.2.x where fp16 scaler still works
-pip -q install "transformers>=4.40" "peft>=0.11" "accelerate==1.2.1" "bitsandbytes>=0.43" "datasets>=2.19" "pyyaml" "psutil" --extra-index-url https://pypi.nvidia.com
+# Lean deps — accelerate 1.5+ has keep_torch_compile for transformers 5.12
+pip -q install "transformers>=4.40" "peft>=0.11" "accelerate==1.5.0" "bitsandbytes>=0.43" "datasets>=2.19" "pyyaml" "psutil" --extra-index-url https://pypi.nvidia.com
 # ensure peft is actually importable (Colab sometimes has stale transformers)
 python -c "import peft; print(f'peft {peft.__version__} ok')" || pip -q install --no-deps peft
 python -c "import torch; print(f'torch {torch.__version__} cuda {torch.version.cuda}'); import torchao; print(f'torchao {torchao.__version__}')"
