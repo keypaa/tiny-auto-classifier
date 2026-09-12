@@ -250,6 +250,24 @@ def build_trainer(cfg: TrainingConfig) -> Trainer:
     else:
         _trainer_kwargs["tokenizer"] = tok
     trainer = Trainer(**_trainer_kwargs)
+    # Workaround: torch 2.11 + accelerate 1.5 fp16 GradScaler unscale bug
+    # _get_grad_norm calls clip_grad_norm_(inf) which triggers unscale and fails for FP16
+    # Patch to use bf16-style no-scaler path when fp16 is broken
+    if use_fp16:
+        try:
+            # disable scaler unscale for this trainer
+            if hasattr(trainer.accelerator, "scaler") and trainer.accelerator.scaler is not None:
+                # monkey-patch unscale to no-op and clip to direct torch
+                orig_unscale = trainer.accelerator.unscale_gradients
+                trainer.accelerator.unscale_gradients = lambda: None
+                orig_clip = trainer.accelerator.clip_grad_norm_
+                def _patched_clip(parameters, max_norm):
+                    # use raw torch clip without unscale
+                    return torch.nn.utils.clip_grad_norm_(parameters, max_norm)
+                trainer.accelerator.clip_grad_norm_ = _patched_clip
+                print("Patched accelerator for fp16 scaler bug (unscale no-op)")
+        except Exception as e:
+            print(f"fp16 patch failed: {e}")
     return trainer
 
 
