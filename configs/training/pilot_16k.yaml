@@ -1,0 +1,30 @@
+# T3 16K curriculum step — uses 98GB headroom (eff batch 32), left-truncation keeps decision tail
+model_id: ProCreations/auto-0.4b
+mode: encoder
+max_length: 16384
+train_file: data/train/pilot_10k.jsonl
+val_file: data/validation/pilot_10k.jsonl
+policy_path: prompts/original/policy.txt
+
+per_device_batch: 4
+grad_accum: 8  # effective 32 → 8000/32 = 250 steps
+epochs: 1
+lr: 2.5e-05  # mild scale-up for eff 32
+weight_decay: 0.01
+warmup_ratio: 0.06
+optimizer: adamw_8bit
+precision: fp16  # auto-upgrades to bf16 where supported (see sft._pick_precision)
+grad_checkpointing: true
+
+lora:
+  enabled: true
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules: null  # auto: ModernBERT -> [Wqkv, Wo, Wi]
+
+output_dir: models/checkpoints/pilot_t3_16k
+seed: 42
+num_workers: 0  # container-safe (no shm hang on kernel 4.19)
+logging_steps: 10
+save_steps: 100
