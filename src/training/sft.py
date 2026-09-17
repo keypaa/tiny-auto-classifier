@@ -35,27 +35,22 @@ def _auto_target_modules(model_id: str, mode: str) -> list[str]:
 
 
 def _pick_precision(cfg: TrainingConfig) -> str:
-    # T4 fp16 GradScaler is broken on torch 2.11 + accelerate 1.2-1.5 (_get_grad_norm unscale)
-    # Use bf16 on T4 (no GradScaler, no unscale) even though is_bf16_supported() is False — torch emulates bf16
+    # fp16 GradScaler unscale is broken on torch 2.11 + accelerate 1.5
+    # (_get_grad_norm calls clip_grad_norm_(inf) even with max_grad_norm=0).
+    # Prefer native bf16 whenever the GPU supports it (Blackwell / A100 / H100):
+    # no scaler, no unscale, full speed.
     try:
-        if torch.cuda.is_available() and "t4" in torch.cuda.get_device_name(0).lower() and cfg.precision == "fp16":
-            print(f"T4 + fp16 scaler broken — forcing bf16 (no scaler) on {torch.cuda.get_device_name(0)}")
-            return "bf16"
+        if torch.cuda.is_available() and cfg.precision == "fp16":
+            if torch.cuda.is_bf16_supported():
+                print(f"{torch.cuda.get_device_name(0)} supports bf16 — upgrading fp16->bf16 (avoids GradScaler bug)")
+                return "bf16"
+            if "t4" in torch.cuda.get_device_name(0).lower():
+                print(f"T4 + fp16 scaler broken — forcing bf16 (emulated, slow) on {torch.cuda.get_device_name(0)}")
+                return "bf16"
     except Exception:
         pass
     if cfg.precision == "bf16" and not torch.cuda.is_available():
         return "fp32"
-    if cfg.precision == "bf16":
-        try:
-            if not torch.cuda.is_bf16_supported():
-                # still allow bf16 on T4 as emulation (slow but no scaler bug)
-                if torch.cuda.is_available() and "t4" in torch.cuda.get_device_name(0).lower():
-                    print("T4 bf16 emulated (no scaler) — keeping bf16 for fp16 workaround")
-                    return "bf16"
-                print("bf16 not supported on this GPU — falling back to fp16")
-                return "fp16"
-        except Exception:
-            return "fp16"
     return cfg.precision
 
 
@@ -160,7 +155,7 @@ def build_trainer(cfg: TrainingConfig) -> Trainer:
     # T4 fp16 + adamw_8bit + GradScaler + clip_grad_norm triggers
     #   ValueError: Attempting to unscale FP16 gradients / BFloat16 not implemented
     optim = "adamw_8bit" if cfg.optimizer == "adamw_8bit" else "adamw_torch"
-    if (use_fp16 or use_bf16) and optim == "adamw_8bit":
+    if use_fp16 and optim == "adamw_8bit":
         print(f"{prec} + adamw_8bit is broken on this torch/accelerate (scaler) — falling back to adamw_torch")
         optim = "adamw_torch"
     try:
