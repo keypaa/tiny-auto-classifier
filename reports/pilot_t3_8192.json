@@ -1,0 +1,52 @@
+{
+  "run": "pilot_t3_8192",
+  "model": "ProCreations/auto-0.4b",
+  "mode": "encoder",
+  "max_length": 8192,
+  "train_rows": 8000,
+  "val_rows": 1000,
+  "effective_batch": 8,
+  "steps": 1000,
+  "train_runtime_s": 4453,
+  "train_loss_final": 2.772,
+  "train_points": 100,
+  "loss_start": 14.92,
+  "loss_end": 0.9848,
+  "evals": [
+    {
+      "eval_loss": 0.2827,
+      "accuracy": 0.876,
+      "false_allow": 0.03364,
+      "false_deny": 0.2948,
+      "epoch": 0.2
+    },
+    {
+      "eval_loss": 0.3403,
+      "accuracy": 0.876,
+      "false_allow": 0.03364,
+      "false_deny": 0.2948,
+      "epoch": 0.4
+    },
+    {
+      "eval_loss": 0.2589,
+      "accuracy": 0.876,
+      "false_allow": 0.03364,
+      "false_deny": 0.2948,
+      "epoch": 0.6
+    },
+    {
+      "eval_loss": 0.342,
+      "accuracy": 0.876,
+      "false_allow": 0.03364,
+      "false_deny": 0.2948,
+      "epoch": 0.8
+    },
+    {
+      "eval_loss": 0.2767,
+      "accuracy": 0.876,
+      "false_allow": 0.03364,
+      "false_deny": 0.2948,
+      "epoch": 1.0
+    }
+  ]
+}
