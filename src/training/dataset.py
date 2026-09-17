@@ -15,8 +15,10 @@ class SFTDataset(Dataset):
     """
     Reads JSONL with fields: transcript, latest_action, label (ALLOW/BLOCK), optional rule_id.
     Builds prompt = policy + transcript + metadata + latest_action via PromptBuilder (hash-checked).
-    Tokenizes to max_length. No silent truncation beyond max_length — sample is hard-truncated
-    and flagged (caller must treat as overflow→fallback at eval, but training still sees it).
+    Tokenizes to max_length with LEFT truncation (keep tail): the policy is a constant
+    prefix, the decision signal (transcript/latest_action) is the suffix. Right truncation
+    would feed every sample as an identical policy prefix (model learns only the prior).
+    Truncation is flagged per sample (overflow→fallback at eval).
 
     Modes:
       encoder: returns {input_ids, attention_mask, labels: 0/1}
@@ -36,6 +38,12 @@ class SFTDataset(Dataset):
         if not self.path.exists():
             raise FileNotFoundError(f"Dataset not found: {self.path}")
         self.tokenizer = tokenizer
+        # LEFT truncation: keep transcript/latest_action tail (see class docstring).
+        # Set on our instance only; short target strings are unaffected by side.
+        try:
+            self.tokenizer.truncation_side = "left"
+        except Exception:
+            pass  # fake/whitespace tokenizers in smoke tests ignore this
         self.mode = mode
         self.max_length = max_length
         self.builder = PromptBuilder(policy_path)
