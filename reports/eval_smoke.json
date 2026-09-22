@@ -1,0 +1,12 @@
+{
+  "adapter": "models/checkpoints/pilot_t3_8192",
+  "base": "ProCreations/auto-0.4b",
+  "data": "data/validation/pilot_10k.jsonl",
+  "n": 10,
+  "max_length": 8192,
+  "accuracy": 0.9,
+  "false_allow": 0.0,
+  "false_deny": 0.3333,
+  "latency_p50_ms": 102414.5,
+  "latency_p95_ms": 113196.5
+}
