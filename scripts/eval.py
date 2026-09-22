@@ -26,6 +26,7 @@ def main():
     ap.add_argument("--data", required=True)
     ap.add_argument("--max-length", type=int, default=8192)
     ap.add_argument("--limit", type=int, default=0, help="0 = full file")
+    ap.add_argument("--device", default="cpu", help="cpu or cuda (cuda only for accuracy, not latency)")
     ap.add_argument("--out", default="reports/eval.json")
     args = ap.parse_args()
 
@@ -45,9 +46,11 @@ def main():
     config.num_labels = 2
     config.id2label = {0: "approve", 1: "deny"}
     config.label2id = {"approve": 0, "deny": 1}
-    print(f"Loading {base_id} on CPU...")
+    device = torch.device(args.device if torch.cuda.is_available() or args.device == "cpu" else "cpu")
+    dtype = torch.bfloat16 if device.type == "cuda" and torch.cuda.is_bf16_supported() else torch.float32
+    print(f"Loading {base_id} on {device} ({dtype})...")
     model = AutoModelForSequenceClassification.from_pretrained(
-        base_id, config=config, trust_remote_code=True, torch_dtype=torch.float32)
+        base_id, config=config, trust_remote_code=True, torch_dtype=dtype).to(device)
     if args.adapter:
         from peft import PeftModel
         model = PeftModel.from_pretrained(model, args.adapter)
@@ -66,8 +69,10 @@ def main():
         for i in range(n):
             b = ds[i]
             t0 = time.perf_counter()
-            logits = model(input_ids=b["input_ids"].unsqueeze(0),
-                           attention_mask=b["attention_mask"].unsqueeze(0)).logits
+            logits = model(input_ids=b["input_ids"].unsqueeze(0).to(device),
+                           attention_mask=b["attention_mask"].unsqueeze(0).to(device)).logits
+            if device.type == "cuda":
+                torch.cuda.synchronize()
             lat.append((time.perf_counter() - t0) * 1000)
             pred = int(logits.argmax(-1))
             true = int(b["labels"])
