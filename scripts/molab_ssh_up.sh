@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+# ⚠️  DO NOT USE ON MOLAB — banned by ToS (marimo.io/pages/molab/restrictions):
+# "remote control such as by SSH" + "connecting to remote proxies or otherwise
+# exposing molab compute" = account restriction without notice. This script got
+# our account restricted in Sep 2026. Kept for reference / non-Molab boxes only.
 # Expose THIS Molab container via real SSH through a bore tunnel.
 #
 # Why this exists: Molab egresses via a NAT pool (no stable public IP,
