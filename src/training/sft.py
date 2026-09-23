@@ -56,6 +56,8 @@ def _pick_precision(cfg: TrainingConfig) -> str:
 
 def build_trainer(cfg: TrainingConfig) -> Trainer:
     cfg.validate()
+    if cfg.resume_from and not Path(cfg.resume_from, "adapter_model.safetensors").exists():
+        raise FileNotFoundError(f"resume_from has no adapter_model.safetensors: {cfg.resume_from}")
     set_seed(cfg.seed)
 
     # tokenizer — use slow path for 65K? fast is fine
@@ -128,6 +130,19 @@ def build_trainer(cfg: TrainingConfig) -> Trainer:
             )
             model = get_peft_model(model, peft_cfg)
             model.print_trainable_parameters()
+            # curriculum resume: load previous stage adapter (same base + same LoRA shape)
+            if cfg.resume_from:
+                from safetensors.torch import load_file
+                from peft import set_peft_model_state_dict
+
+                rp = Path(cfg.resume_from)
+                prev_cfg = json.loads((rp / "adapter_config.json").read_text())
+                assert prev_cfg["r"] == cfg.lora.r, f"LoRA r mismatch: {prev_cfg['r']} vs {cfg.lora.r}"
+                assert set(prev_cfg["target_modules"]) == set(target), "LoRA targets mismatch"
+                assert prev_cfg["base_model_name_or_path"] == cfg.model_id, "base model mismatch"
+                state = load_file(str(rp / "adapter_model.safetensors"))
+                set_peft_model_state_dict(model, state, adapter_name="default")
+                print(f"Resumed LoRA from {rp} ({len(state)} tensors)")
         except ImportError as e:
             print(f"peft import failed ({e}) — training full model (will OOM at 27K on T4)")
             import traceback

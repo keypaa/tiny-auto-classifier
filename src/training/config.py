@@ -44,6 +44,9 @@ class TrainingConfig:
     lora: LoraConfig = field(default_factory=LoraConfig)
     # runtime
     output_dir: str = "models/checkpoints/pilot"
+    # resume LoRA curriculum: path to previous stage adapter dir (same base + same r/targets).
+    # e.g. 16K resumes from pilot_t3_8192. None = fresh LoRA init.
+    resume_from: str | None = None
     seed: int = 42
     num_workers: int = 2  # Colab 4 cores → 2 is safe
     logging_steps: int = 10

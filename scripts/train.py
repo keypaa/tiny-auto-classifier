@@ -26,6 +26,7 @@ def main():
     ap.add_argument("--config", required=True, help="YAML config path")
     ap.add_argument("--max-length", type=int, default=None, help="Override max_length (curriculum step)")
     ap.add_argument("--output-dir", type=str, default=None, help="Override output_dir")
+    ap.add_argument("--resume", type=str, default=None, help="Resume LoRA from previous stage adapter dir")
     ap.add_argument("--dry-run", action="store_true", help="Validate config + one batch, no training")
     args = ap.parse_args()
 
@@ -34,6 +35,8 @@ def main():
         cfg.max_length = args.max_length
     if args.output_dir:
         cfg.output_dir = args.output_dir
+    if args.resume:
+        cfg.resume_from = args.resume
     cfg.validate()
     print(f"Config: {cfg.model_id} mode={cfg.mode} max_length={cfg.max_length} batch={cfg.effective_batch} lora={cfg.lora.enabled} prec={cfg.precision}")
 
