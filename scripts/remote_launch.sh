@@ -25,8 +25,9 @@ fi
     exit 1
   fi
   echo "=== train $(date -u +%FT%TZ) ==="
+  # -u: unbuffered stdout, else loss/eval lines arrive in big delayed chunks (tqdm on stderr stays realtime)
   # shellcheck disable=SC2086
-  exec python scripts/train.py --config "$CONFIG" --output-dir "$OUTDIR" ${MAXLEN:+--max-length $MAXLEN} \
+  exec python -u scripts/train.py --config "$CONFIG" --output-dir "$OUTDIR" ${MAXLEN:+--max-length $MAXLEN} \
     >> "$OUTDIR/train.log" 2>&1
 } &
 echo $! > "$OUTDIR/train.pid"
