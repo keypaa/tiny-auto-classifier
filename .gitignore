@@ -19,3 +19,4 @@ experiments/*
 reports/*.bin
 reports/*.pt
 data/raw/pilot_10k.jsonl
+/bore
