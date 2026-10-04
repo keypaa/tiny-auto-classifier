@@ -62,31 +62,48 @@ def pool_chunks(vecs: np.ndarray, owner: np.ndarray, n: int) -> np.ndarray:
 
 @torch.no_grad()
 def embed_states(states: list[str], model_id: str, chunk_tokens: int, batch: int, device: str):
+    """
+    Chunk by token IDs and feed IDs straight to the model.
+    No decode/re-encode round trip: that is lossy (BPE merges change) and was the
+    preprocessing bottleneck — 243k serial decode calls before the GPU saw work.
+    """
     tok = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
     model = AutoModel.from_pretrained(model_id, trust_remote_code=True).to(device).eval()
+    pad_id = tok.pad_token_id if tok.pad_token_id is not None else 0
 
-    # chunk every state; keep chunk + which sample it belongs to
-    chunk_texts, owner = [], []
+    # 1. chunk the IDs (cheap, no text materialization)
+    chunk_ids: list[list[int]] = []
+    owner: list[int] = []
     for i, s in enumerate(states):
         ids = tok(s, add_special_tokens=False, truncation=True, max_length=32768)["input_ids"]
         for j in range(0, len(ids), chunk_tokens):
-            chunk_texts.append(tok.decode(ids[j : j + chunk_tokens]))
+            chunk_ids.append(ids[j : j + chunk_tokens])
             owner.append(i)
     owner = np.array(owner)
-    print(f"  {len(states)} states -> {len(chunk_texts)} chunks of {chunk_tokens} tokens")
+    n_chunks = len(chunk_ids)
+    print(f"  {len(states)} states -> {n_chunks} chunks of {chunk_tokens} tokens", flush=True)
 
-    vecs = np.zeros((len(chunk_texts), model.config.hidden_size), dtype=np.float32)
+    vecs = np.zeros((n_chunks, model.config.hidden_size), dtype=np.float32)
     t0 = time.perf_counter()
-    for s in range(0, len(chunk_texts), batch):
-        e = tok(chunk_texts[s : s + batch], truncation=True, max_length=chunk_tokens,
-                padding=True, return_tensors="pt").to(device)
-        h = model(**e).last_hidden_state          # (b, L, H)
-        m = e["attention_mask"].unsqueeze(-1).float()
-        # mean-pool inside the chunk (masked), then L2-normalize
+    print(f"  chunk 0/{n_chunks} (warming up)", flush=True)
+    for s in range(0, n_chunks, batch):
+        ids_batch = chunk_ids[s : s + batch]
+        L = max(len(c) for c in ids_batch)
+        inp = torch.full((len(ids_batch), L), pad_id, dtype=torch.long)
+        msk = torch.zeros((len(ids_batch), L), dtype=torch.long)
+        for k, c in enumerate(ids_batch):
+            inp[k, : len(c)] = torch.tensor(c, dtype=torch.long)
+            msk[k, : len(c)] = 1
+        inp, msk = inp.to(device), msk.to(device)
+        h = model(input_ids=inp, attention_mask=msk).last_hidden_state
+        m = msk.unsqueeze(-1).float()
         pooled = (h * m).sum(1) / m.sum(1).clamp(min=1e-6)
-        vecs[s : s + batch] = torch.nn.functional.normalize(pooled, dim=-1).cpu().numpy()
-        if (s // batch) % 50 == 0:
-            print(f"  chunk {s}/{len(chunk_texts)} ({(time.perf_counter()-t0)/60:.1f}min)", flush=True)
+        vecs[s : s + batch] = torch.nn.functional.normalize(pooled, dim=-1).float().cpu().numpy()
+        if (s // batch) % 100 == 0:
+            done = min(s + batch, n_chunks)
+            rate = done / max(1e-9, time.perf_counter() - t0)
+            eta = (n_chunks - done) / max(1e-9, rate)
+            print(f"  chunk {done}/{n_chunks}  {rate:.0f}/s  eta {eta/60:.1f}min", flush=True)
 
     # mean-pool per sample across its chunks
     X = pool_chunks(vecs, owner, len(states))
