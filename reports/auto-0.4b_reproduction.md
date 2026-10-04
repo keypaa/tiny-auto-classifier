@@ -45,6 +45,6 @@ Other verified configs:
 - **auto-0.4b is sweet-spot T3**: 395M encoder beats 600M decoder on paper for §3 (no generation waste, bidirectional, tiny head). Only 2-label head — rule ID would need separate head (§18 multi-head C) or decoder for `BLOCK:R17`.
 - Long-context robustness is *trained*, not just RoPE: two-stage (bulk short + up-to-64K stage with random-depth burying)
 - CPU runtime: PT + `flash_attention_2` is required path; ONNX not viable >8K — do not reject encoder, fix runtime (§9 trap)
-- Next: run `scripts/run_baseline_matrix.py` dry-run now, real weighted run when GPU available; also reproduce threshold via reliability curves §30
+- Next: reproduce the threshold via reliability curves (§30); eval any sequence-classification checkpoint with `scripts/eval.py`
 
 Artifacts: `reports/config_ProCreations__auto-0.4b.json`, `reports/config_Qwen__Qwen3-0.6B.json`, etc.

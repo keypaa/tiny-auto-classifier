@@ -27,7 +27,7 @@ class TrainingConfig:
     mode: Mode = "encoder"  # encoder=SequenceClassification, decoder=CausalLM
     max_length: int = 8192  # curriculum steps: 8192→16384→27110→32768
     # data
-    train_file: str = "data/raw/pilot_stub.jsonl"
+    train_file: str = "data/train/pilot_10k.jsonl"
     val_file: str | None = None
     policy_path: str = "prompts/original/policy.txt"
     # optimization — fits T4 12GB

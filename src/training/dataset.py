@@ -77,7 +77,7 @@ class SFTDataset(Dataset):
         prompt, manifest = self.builder.build(
             transcript=transcript, metadata=metadata, latest_action=latest_action, verify=False
         )
-        # flag over-length (prompt_builder already hashes, but we note truncation)
+        # flag over-length (PromptBuilder already hashes, but we note truncation)
         truncated = manifest.characters > self.max_length * 4  # heuristic, real check after tokenization
 
         enc = self.tokenizer(

@@ -1,107 +1,82 @@
 # Tiny CPU Auto-Mode Classifier
 
-**One-line mission:** distill one expensive decision — *does this agent action violate the unchanged 20–30K-token Auto Mode policy?* — into the smallest CPU-only model that can say `ALLOW` or `BLOCK + exact rule` and fall back when unsure.
+Distil one expensive decision — *does this agent action violate the Auto Mode policy?* — into the smallest CPU-only model that can say `ALLOW` or `BLOCK + rule`, and fall back when unsure.
 
-We are not building a tiny Claude. We are building a security classifier (`ROADMAP.md:1`).
-
----
-
-## What we are doing (phases)
-
-```
-Phase 0  Infrastructure          — done: PromptBuilder (SHA-256), tokenizer probe, benchmark schema, CPU timer, wrapper, hardware 6c Ryzen 4500U 21GB
-Phase 1  Model survey            — done: T1 230M LFM, T2 270M Gemma (32K), T3 395M auto-0.4b (64K sparse, sweet spot), T4 0.6B Qwen (32K)
-Phase 2  auto-0.4b + baseline    — done: 2-label approve/deny, RoPE 2.56M, ONNX trap ~8K / PT+flash_attn 64K, dry-run matrix 8K→64K
-Phase 3  Dataset                 — stub only: 750 toy minimal pairs (data/raw/pilot_stub.jsonl) — NOT real training data
-Phase 4  Pilot SFT 10–25K        — scaffold ready for Colab T4 12GB (LoRA r16, grad checkpointing, fp16, curriculum 8K→16K→27K) — DO NOT run on stub for real
-Phase 5+ Full SFT / DPO / RL / Quant / CPU runtime / Calibration / Cascade
-```
-
-**T-ladder = size:** `T1 230M → T2 270M → T3 395M → T4 0.6B`. **L-ladder = length:** `8K →16K →27K` (full policy ≈27K tokens ≈108K chars). We train short then long (curriculum) because `27K` is `3.5×` the work and OOMs without `flash_attn`.
-
-**Current dataset = stub** (`data/README.md:1`). Real pilot needs `§11` categories (hard/soft block, consent, provenance, scope, wrappers, injection), balance `20/20/20/15/10/10/5`, minimal pairs flipping one property, `6` depth placements (`0-10% … 90-100%`), teacher A/B labeling, explicit holdouts (`RULE_HOLDOUT` etc) in `data/train/validation/test/adversarial/`.
+Not a tiny Claude. A security classifier. Full plan in `ROADMAP.md`.
 
 ---
 
-## Repo structure
+## Status: where we actually are
 
-```
-configs/models/          model survey JSONs
-configs/training/        pilot.yaml (T3), pilot_t1.yaml, pilot_t4.yaml
-configs/hardware.json    Ryzen 4500U DDR4 — inference target
-prompts/original/policy.txt + manifests/policy.sha256  — SHA-256 verified, mismatch = ABORT BENCHMARK
-src/prompt/builder.py    canonical replay: policy + transcript + metadata + latest_action → prompt + manifest
-src/prompt/tokenizer_probe.py
-src/evaluation/schema.py BaselineRow / FailureRecord (§35)
-src/runtimes/cpu_timer.py p50/p95/p99 + RSS (§28 split: tokenization / attention / head / wrapper)
-src/wrapper/deterministic.py  {decision,rule_id,confidence} → <block>no</block> / <block>yes</block><category>
-src/training/config.py | dataset.py | sft.py   lean SFT, encoder vs decoder, LoRA+checkpointing
-scripts/check_policy.py, build_prompt.py, probe_tokenizers.py, run_baseline_matrix.py, train.py, colab_setup.sh
-reports/   model_survey.md / auto-0.4b_reproduction.md / baseline_matrix.md (versioned)
-data/raw/pilot_stub.jsonl  — 750 toy rows, plumbing only
-```
+| Phase | State |
+|---|---|
+| Infra (PromptBuilder, hash guard, eval schema, CPU timer, wrapper) | done |
+| Model survey | done — `reports/model_survey.md` |
+| `auto-0.4b` reproduction | done — `reports/auto-0.4b_reproduction.md` |
+| Pilot SFT (T3 encoder, 8K) | done — `0.876 / 0.029 FA / 0.302 FD` on our synthetic val |
+| **Stage 0 diagnostics** | **done — the core hypothesis failed its own test** |
+| Next decision | in-context policy application vs learned rule |
 
-**Fail-closed `src/wrapper/deterministic.py:1`:** any of `policy_hash mismatch, truncation, unknown rule, NaN confidence, timeout, runtime error` → `FALLBACK`, never `ALLOW`.
+### The Stage 0 result, in one line
+
+Our fine-tuned encoder scores **0.883 with the full 27K policy in the input and 0.873 with no policy at all**. It is not applying the policy in-context — it learned a rule. Full analysis: `reports/stage0_findings.md`.
+
+Along the way `ProCreations` published `auto-1b` (96.40% accuracy, 3.19% false-deny, 97.02% long-context) plus an ONNX int8 export, and two datasets (`ProCreations/auto` 700k, `ProCreations/approve-or-deny` 3k). Our numbers and theirs are **not comparable** — different datasets — and that is the current blocker.
 
 ---
+
+## Layout
+
+```
+configs/models/         survey specs per candidate
+configs/training/       pilot.yaml (8K) + pilot_16k / pilot_27k / t1 / t4
+configs/hardware.json   target machine: Ryzen 4500U, 6c, 21GB DDR4
+prompts/original/       policy.txt + manifests/policy.sha256  (SYNTHETIC placeholder)
+src/prompt/builder.py   canonical replay + SHA-256 fail-closed guard
+src/training/           config.py | dataset.py | sft.py   (encoder + decoder SFT, LoRA)
+src/dataset/            pilot_generator.py | dpo_pairs.py
+src/evaluation/schema.py BaselineRow / FailureRecord
+src/runtimes/cpu_timer.py p50/p95/p99 + RSS
+src/wrapper/deterministic.py  {decision,rule_id,confidence} -> XML, fail-closed
+scripts/                check_policy | train | eval | diag_stage0 | diag_onnx | colab_setup
+reports/                survey, repro, run results, stage0 findings
+docs/AGENT_BRIEF.md     self-contained brief for an independent agent to re-plan
+```
+
+## Hard constraints (unchanged)
+
+- **Inference is CPU-only.** Target: 6-core Ryzen 4500U, AVX2, 21GB DDR4, batch 1.
+- **The policy must not be summarized, compressed, retrieved piecewise or rewritten.** Primary benchmark constraint.
+- **Output is deterministic and structured.** Must carry a rule id. Fail closed on anything unexpected.
+
+## Fail-closed
+
+`PolicyHashMismatchError` on policy hash drift; `src/wrapper/deterministic.py` returns `FALLBACK` for unknown rule, NaN/Inf confidence, malformed output or out-of-range confidence. Never silently allows.
 
 ## Quickstart
 
-### 1) Local (Ryzen CPU, no GPU) — verify infra
-
 ```bash
-git clone <this>
-cd tiny-auto-classifier
-python scripts/check_policy.py          # OK policy_hash=e091... 108313 chars (synthetic placeholder — replace with real policy)
-python scripts/build_prompt.py --latest-action "rm -rf /tmp/foo" --metadata "test" --transcript "User: hi"
-python scripts/probe_tokenizers.py      # optional
-python scripts/run_baseline_matrix.py --dry-run   # proves schema, writes reports/baseline_matrix.md
-python -m src.training.dataset          # or: python src/dataset/generator.py --n 500
-```
+pip install -e ".[dev]"          # or: pip install transformers peft scikit-learn pyyaml psutil
 
-### 2) Colab T4 12GB VRAM / 15GB RAM / 4 cores — when real dataset is ready
+python scripts/check_policy.py   # SHA-256 guard (fail-closed)
 
-```bash
-# one-time setup (no training)
+# diagnostics
+python scripts/diag_stage0.py --adapter <adapter_dir> --limit 300   # needs GPU
+python scripts/diag_onnx.py --skip-fp32-torch                      # CPU latency + INT8
+
+# training (Colab T4 or better)
 bash scripts/colab_setup.sh
-# → installs transformers peft accelerate bitsandbytes
-# → verifies policy hash
-# → dry-run one batch per tier (checks no OOM, prints CUDA free)
-
-# DO NOT run the loop on the stub — stub is not real data.
-# After you have data/train/pilot_10k.jsonl (real §11 data):
-
-# cheapest proof: 8K only (~4h for T3 on T4 30%)
-python scripts/train.py --config configs/training/pilot.yaml --max-length 8192 --output-dir models/checkpoints/pilot_t3_8192
-
-# then curriculum (when 8K learns):
-for L in 8192 16384 27110; do
-  python scripts/train.py --config configs/training/pilot.yaml --max-length $L --output-dir models/checkpoints/pilot_t3_$L
-done
-# same for T1/T4: --config configs/training/pilot_t1.yaml etc
-
-# eval stays on CPU for real latency:
-python scripts/run_baseline_matrix.py --contexts 8192 16384 27110 32768
+python scripts/train.py --config configs/training/pilot.yaml --max-length 8192 \
+    --output-dir models/checkpoints/pilot_t3_8192
+python scripts/train.py --config configs/training/pilot_16k.yaml \
+    --resume models/checkpoints/pilot_t3_8192
 ```
 
-**What not to do:** `25K@27K` straight on stub = `~19h` T4 wasted, `CPU ~300 days`. Pilot stub is for `scripts/train.py --dry-run` only (one batch).
+`scripts/molab_ssh_up.sh` is kept for reference only — **SSH tunnelling violates Molab's terms of use** and got this account restricted. Do not run it on Molab.
 
----
+## Conventions
 
-## Expected costs on T4 (TFLOP = 10¹² ops count, TFLOPS = ops/s)
-
-`FLOPs/sample = 8×N×L + 3×Attn` (`8` = recompute with checkpointing). `T4 peak 65 TFLOPS fp16, eff 19.5 @30%`
-
-| model | 8K/sample | 27K/sample | 10K@8K | 10K@27K | 10K curriculum 8K/16K/27K avg |
-|-------|-----------|------------|--------|---------|-------------------------------|
-| T1 230M | 20.8 TFLOP | 113 TFLOP | 3.0h | 16.1h | 8.9h |
-| T3 395M | 30.2 TFLOP | 131 TFLOP | 4.3h | 18.7h | 10.9h |
-| T4 0.6B | 50.9 TFLOP | 257 TFLOP | 7.3h | 36.6h | 20.5h |
-
-CPU Ryzen `~50 GFLOPS` → `10K@27K` `~300 days` (`390×` slower) — why training needs T4, inference needs CPU.
-
----
-
-## Next step
-
-We are at the **dataset gate**. Next commit should be real `data/train/pilot_10k.jsonl` + `validation/test/adversarial` + holdouts, then pilot SFT `8K` → threshold calibration. Training on the stub is a pipeline test, not a model.
+- **Accuracy on GPU, latency on CPU.** They are different questions; never mix them.
+- **bf16 is native on Blackwell/A100, emulated on Turing (T4)** where it is 1.7× slower than fp32. `sft.py` picks per device.
+- **Truncate on the left.** The policy is a constant prefix and the decision signal is the suffix; right-truncation silently feeds identical policy prefixes and the model learns only the class prior.
+- **Every experiment writes a report under `reports/`** with measured numbers, never hand-copied.

@@ -30,4 +30,4 @@ done
 echo "=== Ready ==="
 echo "Curriculum (manual, lean):"
 echo "  for L in 8192 16384 27110; do python scripts/train.py --config configs/training/pilot.yaml --max-length \$L --output-dir models/checkpoints/pilot_t3_\${L}; done"
-echo "Then eval on CPU: python scripts/run_baseline_matrix.py (or custom eval)"
+echo "Then eval: python scripts/eval.py --adapter <dir> --data data/validation/pilot_10k.jsonl"
