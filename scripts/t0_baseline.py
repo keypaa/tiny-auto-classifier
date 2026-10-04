@@ -61,27 +61,46 @@ def pool_chunks(vecs: np.ndarray, owner: np.ndarray, n: int) -> np.ndarray:
 
 
 @torch.no_grad()
-def embed_states(states: list[str], model_id: str, chunk_tokens: int, batch: int, device: str):
+def embed_states(rows: list[dict], policy_path: str, model_id: str, chunk_tokens: int,
+                 batch: int, device: str):
     """
     Chunk by token IDs and feed IDs straight to the model.
-    No decode/re-encode round trip: that is lossy (BPE merges change) and was the
-    preprocessing bottleneck — 243k serial decode calls before the GPU saw work.
+
+    Two measured bottlenecks avoided:
+      1. decode/re-tokenize per chunk (lossy: BPE merges change)
+      2. re-tokenizing the 27K-token policy for all 9000 samples — byte-identical every
+         time, so tokenize it ONCE and splice only the short dynamic suffix (~500x less work)
     """
     tok = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
     model = AutoModel.from_pretrained(model_id, trust_remote_code=True).to(device).eval()
     pad_id = tok.pad_token_id if tok.pad_token_id is not None else 0
 
-    # 1. chunk the IDs (cheap, no text materialization)
+    pb = PromptBuilder(policy_path)
+    pb.verify_policy()
+    t0 = time.perf_counter()
+    policy_ids = tok(pb.policy_text, add_special_tokens=False, truncation=True,
+                     max_length=32768)["input_ids"]
+    print(f"  policy tokenized once: {len(policy_ids)} tokens ({time.perf_counter()-t0:.1f}s)", flush=True)
+
     chunk_ids: list[list[int]] = []
     owner: list[int] = []
-    for i, s in enumerate(states):
-        ids = tok(s, add_special_tokens=False, truncation=True, max_length=32768)["input_ids"]
+    t0 = time.perf_counter()
+    for i, r in enumerate(rows):
+        dyn = pb.dynamic_template.format(
+            transcript=r.get("transcript", ""),
+            metadata=r.get("metadata", ""),
+            latest_action=r.get("latest_action", ""),
+        )
+        dyn_ids = tok(dyn, add_special_tokens=False, truncation=True, max_length=4096)["input_ids"]
+        ids = policy_ids + dyn_ids
         for j in range(0, len(ids), chunk_tokens):
             chunk_ids.append(ids[j : j + chunk_tokens])
             owner.append(i)
+        if (i + 1) % 3000 == 0:
+            print(f"  spliced {i+1}/{len(rows)} states ({time.perf_counter()-t0:.0f}s)", flush=True)
     owner = np.array(owner)
     n_chunks = len(chunk_ids)
-    print(f"  {len(states)} states -> {n_chunks} chunks of {chunk_tokens} tokens", flush=True)
+    print(f"  {len(rows)} states -> {n_chunks} chunks of {chunk_tokens} tokens", flush=True)
 
     vecs = np.zeros((n_chunks, model.config.hidden_size), dtype=np.float32)
     t0 = time.perf_counter()
@@ -146,7 +165,7 @@ def main():
     else:
         print(f"Embedding {len(tr)+len(ev)} states on {args.device} ({args.embedder})...")
         t0 = time.perf_counter()
-        X_all = embed_states(build_states(tr + ev, "prompts/original/policy.txt"),
+        X_all = embed_states(tr + ev, "prompts/original/policy.txt",
                              args.embedder, args.chunk_tokens, args.batch, args.device)
         X_tr, X_ev = X_all[: len(tr)], X_all[len(tr):]
         y_tr, y_ev = y_tr, y_ev
