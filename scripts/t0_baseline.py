@@ -73,6 +73,10 @@ def embed_states(rows: list[dict], policy_path: str, model_id: str, chunk_tokens
     """
     tok = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
     model = AutoModel.from_pretrained(model_id, trust_remote_code=True).to(device).eval()
+    # bf16 on CUDA: fp32 on T4 is 8 TFLOPS vs 65 — this alone was ~8x
+    if device.startswith("cuda") and torch.cuda.is_bf16_supported():
+        model = model.to(torch.bfloat16)
+        print("  model dtype: bfloat16", flush=True)
     pad_id = tok.pad_token_id if tok.pad_token_id is not None else 0
 
     pb = PromptBuilder(policy_path)
@@ -104,21 +108,22 @@ def embed_states(rows: list[dict], policy_path: str, model_id: str, chunk_tokens
 
     vecs = np.zeros((n_chunks, model.config.hidden_size), dtype=np.float32)
     t0 = time.perf_counter()
-    print(f"  chunk 0/{n_chunks} (warming up)", flush=True)
     for s in range(0, n_chunks, batch):
         ids_batch = chunk_ids[s : s + batch]
         L = max(len(c) for c in ids_batch)
-        inp = torch.full((len(ids_batch), L), pad_id, dtype=torch.long)
-        msk = torch.zeros((len(ids_batch), L), dtype=torch.long)
+        # vectorized: pad into one numpy block, no per-row torch.tensor()
+        buf = np.full((len(ids_batch), L), pad_id, dtype=np.int64)
+        mbuf = np.zeros((len(ids_batch), L), dtype=np.int64)
         for k, c in enumerate(ids_batch):
-            inp[k, : len(c)] = torch.tensor(c, dtype=torch.long)
-            msk[k, : len(c)] = 1
-        inp, msk = inp.to(device), msk.to(device)
+            buf[k, : len(c)] = c
+            mbuf[k, : len(c)] = 1
+        inp = torch.from_numpy(buf).to(device)
+        msk = torch.from_numpy(mbuf).to(device)
         h = model(input_ids=inp, attention_mask=msk).last_hidden_state
-        m = msk.unsqueeze(-1).float()
+        m = msk.unsqueeze(-1).to(h.dtype)
         pooled = (h * m).sum(1) / m.sum(1).clamp(min=1e-6)
-        vecs[s : s + batch] = torch.nn.functional.normalize(pooled, dim=-1).float().cpu().numpy()
-        if (s // batch) % 100 == 0:
+        vecs[s : s + batch] = torch.nn.functional.normalize(pooled.float(), dim=-1).cpu().numpy()
+        if (s // batch) % 50 == 0:
             done = min(s + batch, n_chunks)
             rate = done / max(1e-9, time.perf_counter() - t0)
             eta = (n_chunks - done) / max(1e-9, rate)
@@ -143,7 +148,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--embedder", default="nomic-ai/modernbert-embed-base")
     ap.add_argument("--chunk-tokens", type=int, default=1024)
-    ap.add_argument("--batch", type=int, default=16)
+    ap.add_argument("--batch", type=int, default=64)
     ap.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     ap.add_argument("--limit-train", type=int, default=8000)
     ap.add_argument("--limit-eval", type=int, default=1000)
