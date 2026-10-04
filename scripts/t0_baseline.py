@@ -62,29 +62,40 @@ def pool_chunks(vecs: np.ndarray, owner: np.ndarray, n: int) -> np.ndarray:
 
 @torch.no_grad()
 def embed_states(rows: list[dict], policy_path: str, model_id: str, chunk_tokens: int,
-                 batch: int, device: str):
+                 batch: int, device: str, include_policy: bool = False):
     """
     Chunk by token IDs and feed IDs straight to the model.
 
-    Two measured bottlenecks avoided:
+    Measured bottlenecks this avoids (scripts/bench_embed.py):
       1. decode/re-tokenize per chunk (lossy: BPE merges change)
-      2. re-tokenizing the 27K-token policy for all 9000 samples — byte-identical every
-         time, so tokenize it ONCE and splice only the short dynamic suffix (~500x less work)
+      2. fp32 on T4: bf16 is EMULATED on Turing and is 1.7x SLOWER than fp32
+         (350 vs 202 ms/chunk) — measured. fp16 has native tensor cores.
+      3. chunk length 512 beats 1024 (86 vs 202 ms/chunk)
+
+    include_policy=False by default, and that is the whole point:
+      The policy is byte-identical for all rows, so for a bag-of-chunks model it
+      contributes the SAME vector c to every sample. A constant carries zero
+      discriminative signal and is absorbed by the logistic-regression intercept.
+      Embedding it 9000x is 198k chunks of pure noise. We embed only the dynamic
+      suffix (transcript + action), which is where all the label information is.
     """
     tok = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
     model = AutoModel.from_pretrained(model_id, trust_remote_code=True).to(device).eval()
-    # bf16 on CUDA: fp32 on T4 is 8 TFLOPS vs 65 — this alone was ~8x
-    if device.startswith("cuda") and torch.cuda.is_bf16_supported():
-        model = model.to(torch.bfloat16)
-        print("  model dtype: bfloat16", flush=True)
+    # T4 = Turing: native fp16 tensor cores, EMULATED bf16 (slower). fp16 it is.
+    if device.startswith("cuda"):
+        model = model.half()
+        print("  model dtype: float16 (native on T4; bf16 is emulated and slower)", flush=True)
     pad_id = tok.pad_token_id if tok.pad_token_id is not None else 0
 
     pb = PromptBuilder(policy_path)
     pb.verify_policy()
-    t0 = time.perf_counter()
-    policy_ids = tok(pb.policy_text, add_special_tokens=False, truncation=True,
-                     max_length=32768)["input_ids"]
-    print(f"  policy tokenized once: {len(policy_ids)} tokens ({time.perf_counter()-t0:.1f}s)", flush=True)
+
+    policy_ids: list[int] = []
+    if include_policy:
+        t0 = time.perf_counter()
+        policy_ids = tok(pb.policy_text, add_special_tokens=False, truncation=True,
+                         max_length=32768)["input_ids"]
+        print(f"  + policy tokenized once: {len(policy_ids)} tokens ({time.perf_counter()-t0:.1f}s)", flush=True)
 
     chunk_ids: list[list[int]] = []
     owner: list[int] = []
@@ -97,14 +108,17 @@ def embed_states(rows: list[dict], policy_path: str, model_id: str, chunk_tokens
         )
         dyn_ids = tok(dyn, add_special_tokens=False, truncation=True, max_length=4096)["input_ids"]
         ids = policy_ids + dyn_ids
+        if not ids:
+            ids = [tok.eos_token_id or 0]
         for j in range(0, len(ids), chunk_tokens):
             chunk_ids.append(ids[j : j + chunk_tokens])
             owner.append(i)
         if (i + 1) % 3000 == 0:
-            print(f"  spliced {i+1}/{len(rows)} states ({time.perf_counter()-t0:.0f}s)", flush=True)
+            print(f"  tokenized {i+1}/{len(rows)} states ({time.perf_counter()-t0:.0f}s)", flush=True)
     owner = np.array(owner)
     n_chunks = len(chunk_ids)
-    print(f"  {len(rows)} states -> {n_chunks} chunks of {chunk_tokens} tokens", flush=True)
+    print(f"  {len(rows)} states -> {n_chunks} chunks of {chunk_tokens} tokens"
+          f"{' (policy EXCLUDED)' if not include_policy else ''}", flush=True)
 
     vecs = np.zeros((n_chunks, model.config.hidden_size), dtype=np.float32)
     t0 = time.perf_counter()
@@ -147,13 +161,14 @@ def metrics(y_true, y_pred) -> dict:
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--embedder", default="nomic-ai/modernbert-embed-base")
-    ap.add_argument("--chunk-tokens", type=int, default=1024)
-    ap.add_argument("--batch", type=int, default=64)
+    ap.add_argument("--chunk-tokens", type=int, default=512)  # measured: 86ms vs 202ms at 1024
+    ap.add_argument("--batch", type=int, default=32)  # measured flat past 16
     ap.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     ap.add_argument("--limit-train", type=int, default=8000)
     ap.add_argument("--limit-eval", type=int, default=1000)
     ap.add_argument("--cache", default=EMB_PATH)
     ap.add_argument("--no-cache", action="store_true")
+    ap.add_argument("--include-policy", action="store_true", help="also embed the policy (constant across rows; off by default)")
     ap.add_argument("--out", default="reports/t0_baseline.json")
     args = ap.parse_args()
 
@@ -171,7 +186,7 @@ def main():
         print(f"Embedding {len(tr)+len(ev)} states on {args.device} ({args.embedder})...")
         t0 = time.perf_counter()
         X_all = embed_states(tr + ev, "prompts/original/policy.txt",
-                             args.embedder, args.chunk_tokens, args.batch, args.device)
+                             args.embedder, args.chunk_tokens, args.batch, args.device, args.include_policy)
         X_tr, X_ev = X_all[: len(tr)], X_all[len(tr):]
         y_tr, y_ev = y_tr, y_ev
         mins = (time.perf_counter() - t0) / 60
