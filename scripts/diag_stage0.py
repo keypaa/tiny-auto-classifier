@@ -80,15 +80,17 @@ def infer(model, tok, rows, policy_text, max_length, device) -> list[dict]:
     return out
 
 
-_PB_CACHE = {}
+_PB_CACHE: dict = {}
 
 
 def _pb_with(policy_text: str) -> PromptBuilder:
-    """PromptBuilder over an arbitrary policy string, bypassing the file/hash check."""
-    key = id(policy_text)
+    """PromptBuilder over an arbitrary policy string, bypassing the file/hash check.
+    Keyed by content hash, not id() — id() is reused after GC and would alias variants."""
+    import hashlib, tempfile
+    key = hashlib.sha256(policy_text.encode("utf-8")).hexdigest()
     if key not in _PB_CACHE:
-        import tempfile
-        p = Path(tempfile.mkdtemp()) / "policy.txt"
+        d = Path(tempfile.mkdtemp())
+        p = d / "policy.txt"
         p.write_text(policy_text, encoding="utf-8")
         _PB_CACHE[key] = PromptBuilder(p)
     return _PB_CACHE[key]
