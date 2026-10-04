@@ -1,22 +1,17 @@
+# model artifacts (large, regenerable from a config + dataset)
+models/
+experiments/
+data/raw/
+*.zip
+*.npz
+*.onnx
+
+# tooling
 __pycache__/
 *.pyc
 .venv/
 venv/
-models/base/*
-models/checkpoints/*
-models/exports/*
-data/raw/*
-data/generated/*
-data/teacher/*
-data/train/*
-data/validation/*
-data/test/*
-data/adversarial/*
-!*/.gitkeep
-experiments/*
-!experiments/.gitkeep
-# reports are versioned (roadmap §49) — keep md/json, ignore large binaries
-reports/*.bin
-reports/*.pt
-data/raw/pilot_10k.jsonl
-/bore
+bore
+
+# secrets
+.env

@@ -153,14 +153,52 @@ def generate(n: int = 10000, out_dir: str = "data") -> dict:
             records.append({"sample_id": f"fill_{len(records)}_{make_id(t,a,label)}", "transcript": t, "latest_action": a, "label": label, "category": "clear_allow", "rule_id": None, "holdout": None})
     elif len(records) > n:
         records = records[:n]
-    train = records[:n_train]
-    val = records[n_train:n_train+n_val]
-    test = records[n_train+n_val:n_train+n_val+n_test]
-    adv = [r for r in records if r["category"]=="adversarial"][:500]  # 500 adversarial for dedicated test
+
+    # SPLIT BY GROUP, not by row. Minimal pairs must not straddle splits
+    # (roadmap section 16): if pair member A lands in train and B in val, the
+    # model has seen one half of every boundary it is tested on, and pair
+    # consistency becomes unmeasurable on val. Group by pair_id; everything
+    # else is its own group.
+    groups: dict[str, list[dict]] = {}
+    for r in records:
+        groups.setdefault(r.get("pair_id") or f"__solo_{r['sample_id']}", []).append(r)
+    keys = sorted(groups)
+    random.shuffle(keys)
+
+    train, val, test = [], [], []
+    target = (n_train, n_val, n_test)
+    buckets = (train, val, test)
+    for k in keys:
+        # place into the bucket that is furthest below its target, so group size
+        # variation (pairs are 2 rows) cannot skew the ratios
+        gaps = [target[i] - len(buckets[i]) for i in range(3)]
+        i = gaps.index(max(gaps))
+        buckets[i].extend(groups[k])
+    for b in buckets:
+        random.shuffle(b)
+
+    adv = [r for r in records if r["category"] == "adversarial"][:500]
     if not adv:
         adv = test[:100]
-    # write
+
+    # VERIFY the invariant that matters: no pair_id may appear in two splits.
+    # This is the check that would have caught the original bug.
+    seen: dict[str, str] = {}
+    dupes = []
+    for name, b in (("train", train), ("val", val), ("test", test)):
+        for r in b:
+            pid = r.get("pair_id")
+            if not pid:
+                continue
+            if pid in seen and seen[pid] != name:
+                dupes.append((pid, seen[pid], name))
+            seen[pid] = name
+    assert not dupes, f"pair leakage across splits: {dupes[:5]}"
+    n_groups = sum(1 for k in keys if not k.startswith("__solo_"))
+    print(f"pair groups: {n_groups}, all fully inside one split (verified, 0 leakage)")
+
     def write(path, recs):
+        Path(path).parent.mkdir(parents=True, exist_ok=True)
         Path(path).write_text("\n".join(json.dumps(r) for r in recs), encoding="utf-8")
         print(f"Wrote {path}: {len(recs)} (ALLOW {sum(1 for r in recs if r['label']=='ALLOW')} BLOCK {sum(1 for r in recs if r['label']=='BLOCK')})")
 
