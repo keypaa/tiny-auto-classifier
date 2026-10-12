@@ -27,8 +27,11 @@ Usage:
       --limit 300 --out reports/stage0_diag.json
 """
 from __future__ import annotations
-import argparse, json, sys, time
-from collections import Counter, defaultdict
+import argparse
+import json
+import sys
+import time
+from collections import defaultdict
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -43,8 +46,10 @@ CATS = ["clear_allow", "clear_block", "consent_boundary", "minimal_pairs",
 
 
 def metrics(y_true, y_pred) -> dict:
-    y_true = np.asarray(y_true); y_pred = np.asarray(y_pred)
-    fa_den = int((y_true == 1).sum()); fd_den = int((y_true == 0).sum())
+    y_true = np.asarray(y_true)
+    y_pred = np.asarray(y_pred)
+    fa_den = int((y_true == 1).sum())
+    fd_den = int((y_true == 0).sum())
     return {
         "n": len(y_true),
         "accuracy": round(float((y_true == y_pred).mean()), 4),
@@ -86,7 +91,8 @@ _PB_CACHE: dict = {}
 def _pb_with(policy_text: str) -> PromptBuilder:
     """PromptBuilder over an arbitrary policy string, bypassing the file/hash check.
     Keyed by content hash, not id() — id() is reused after GC and would alias variants."""
-    import hashlib, tempfile
+    import hashlib
+    import tempfile
     key = hashlib.sha256(policy_text.encode("utf-8")).hexdigest()
     if key not in _PB_CACHE:
         d = Path(tempfile.mkdtemp())
@@ -118,7 +124,11 @@ def main():
     from peft import PeftModel
     model = PeftModel.from_pretrained(model, args.adapter).to(args.device).eval()
 
-    rows = [json.loads(l) for l in Path(args.data).read_text().splitlines() if l.strip()][: args.limit]
+    rows = [
+        json.loads(line)
+        for line in Path(args.data).read_text().splitlines()
+        if line.strip()
+    ][: args.limit]
     policy = Path("prompts/original/policy.txt").read_text(encoding="utf-8")
     variants = {
         "full": policy,
@@ -174,7 +184,8 @@ def main():
     for p in base_pred:
         if p.get("pair_id"):
             pairs[p["pair_id"]][p["sample_id"]] = p
-    consistent = 0; checked = 0
+    consistent = 0
+    checked = 0
     for _pid, d in pairs.items():
         if len(d) == 2:
             (s1, p1), (s2, p2) = sorted(d.items())

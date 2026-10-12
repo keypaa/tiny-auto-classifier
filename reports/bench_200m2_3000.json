@@ -1,0 +1,15 @@
+{
+  "model": "ProCreations/auto-200m-2",
+  "n": 3000,
+  "accuracy": 0.962,
+  "balanced_acc": 0.9618,
+  "false_approve": 0.04,
+  "false_deny": 0.0363,
+  "latency_s": 0.0056,
+  "confusion": {
+    "tp_deny": 1345,
+    "tn_approve": 1541,
+    "fp_waved": 56,
+    "fn_blocked": 58
+  }
+}

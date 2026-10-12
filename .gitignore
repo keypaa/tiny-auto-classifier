@@ -15,3 +15,6 @@ bore
 
 # secrets
 .env
+
+# conversation exports (may contain live secrets; never commit)
+data/import/

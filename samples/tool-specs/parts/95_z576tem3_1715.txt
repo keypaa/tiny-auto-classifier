@@ -1,0 +1,17 @@
+
+FILE: chunk-z576tem3.js   OFFSET: 1715
+--- PRECEDING CONTEXT (1715 chars) ---
+// @bun @bytecode
+// Claude Code is a Beta product per Anthropic's Commercial Terms of Service.
+// By using Claude Code, you agree that all code acceptance or rejection decisions you make,
+// and the associated conversations in context, constitute Feedback under Anthropic's Commercial Terms,
+// and may be used to improve Anthropic's products, including training models.
+// You are responsible for reviewing any code suggestions before use.
+
+// (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
+
+// Version: 2.1.289
+import{f}from"./chunk-hxc66rxt.js";import{xs}from"./chunk-q75vj0vh.js";import{nt,P,l}from"./chunk-q5h60nvm.js";import{I}from"./chunk-f4y6hk8a.js";import{b,t}from"./chunk-sdt6jsgm.js";import{xf,yv}from"./chunk-xf76hbkc.js";import{Wo}from"./chunk-3gg4ax1z.js";import{Llt}from"./chunk-hwj4b3cv.js";import{Gt}from"./chunk-898k2gs2.js";import{FE}from"./chunk-a5xgygxa.js";import{dj,vxo,Exo,IN,kxo,Txo,gO,_5e,t2n,eMr,n2n,ZG,EIo,kIo}from"./chunk-wgfrtm7w.js";import{vSe}from"./chunk-nzmch2q1.js";import{Z_}from"./chunk-zswdfsnp.js";import{eA,pQ,fQ}from"./chunk-1y80m7e8.js";import{BUt}from"./chunk-bfmr5z4y.js";import{gS}from"./chunk-btwqsnzk.js";import{o,C,u}from"./chunk-pm8xqwnw.js";var z=f(()=>u({server:o().optional().describe("Optional server name to filter resources by")})),O=f(()=>C(u({uri:o().describe("Resource URI"),name:o().describe("Resource name"),mimeType:o().optional().describe("MIME type of the resource"),description:o().optional().describe("Resource description"),server:o().describe("Server that provides this resource")}))),sO=Gt({isConcurrencySafe(){return!0},isReadOnly(){return!0},
+--- METHOD ---
+toAutoClassifierInput(e){return e.server??""}
+

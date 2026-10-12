@@ -8,7 +8,7 @@ from typing import Literal
 import torch
 from torch.utils.data import Dataset
 
-from src.prompt.builder import PromptBuilder, PolicyHashMismatchError
+from src.prompt.builder import PromptBuilder
 
 
 class SFTDataset(Dataset):
@@ -50,7 +50,11 @@ class SFTDataset(Dataset):
         if verify_policy:
             self.builder.verify_policy()  # fail-closed at data load
 
-        self.records = [json.loads(l) for l in self.path.read_text().splitlines() if l.strip()]
+        self.records = [
+            json.loads(line)
+            for line in self.path.read_text().splitlines()
+            if line.strip()
+        ]
         if not self.records:
             raise ValueError(f"Empty dataset: {self.path}")
 
@@ -157,10 +161,10 @@ def collate_decoder(batch: list[dict], pad_token_id: int = 0) -> dict:
     mask = torch.zeros((bsz, max_len), dtype=torch.long)
     labels = torch.full((bsz, max_len), -100, dtype=torch.long)
     for i, b in enumerate(batch):
-        l = len(b["input_ids"])
-        ids[i, :l] = b["input_ids"]
-        mask[i, :l] = b["attention_mask"]
+        n = len(b["input_ids"])
+        ids[i, :n] = b["input_ids"]
+        mask[i, :n] = b["attention_mask"]
         # labels may be shorter (prompt part -100); align left
-        ll = len(b["labels"])
-        labels[i, :ll] = b["labels"]
+        n_labels = len(b["labels"])
+        labels[i, :n_labels] = b["labels"]
     return {"input_ids": ids, "attention_mask": mask, "labels": labels}

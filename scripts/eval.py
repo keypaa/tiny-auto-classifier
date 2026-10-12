@@ -9,7 +9,10 @@ Usage:
 Loads on CPU (inference target), left-truncation via SFTDataset (train/eval parity).
 """
 from __future__ import annotations
-import argparse, json, sys, time
+import argparse
+import json
+import sys
+import time
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -78,9 +81,11 @@ def main():
             true = int(b["labels"])
             correct += pred == true
             if true == 1:
-                fa_den += 1; fa_num += pred == 0
+                fa_den += 1
+                fa_num += pred == 0
             else:
-                fd_den += 1; fd_num += pred == 1
+                fd_den += 1
+                fd_num += pred == 1
             if i < 5 or (i + 1) % 50 == 0:
                 print(f"  {i+1}/{n} acc={correct/(i+1):.3f} p50={sorted(lat)[len(lat)//2]:.0f}ms", flush=True)
             preds.append({"i": i, "pred": pred, "true": true})

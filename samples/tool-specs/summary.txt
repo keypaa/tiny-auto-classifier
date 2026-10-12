@@ -1,0 +1,97 @@
+01 chunk-0z420tav.js @4509 len=44 :: toAutoClassifierInput(){return"list agents"}
+02 chunk-19rk5k5f.js @16995 len=423 :: toAutoClassifierInput(n){if(n.method==="finalize_plan"){let e=(i)=>{let r=i??[],s=50;if(r.length<=50)return r.join(", ");return`${r.length} paths (too many to list here; the user's permission prompt shows the full list)`};return`project ${n.projectId??"?"} from ${A(oe(),n.localDir??".")}: write ${e(
+03 chunk-1y6g10ys.js @4986 len=56 :: toAutoClassifierInput(e){return`${e.cron}: ${e.prompt}`}
+04 chunk-28888bb3.js @13708 len=201 :: toAutoClassifierInput(e){return(e.proposals??[]).map((n)=>n.kind==="improvement"&&n.target?`${n.name??""} (improves ${n.target}): ${n.description??""}`:`${n.name??""}: ${n.description??""}`).join(`\n`)}
+05 chunk-2dk1sr5c.js @100366 len=100 :: toAutoClassifierInput(e){return e.subagent_type?`(${e.subagent_type}): ${e.prompt}`:`: ${e.prompt}`}
+06 chunk-2yr4r0q6.js @7353 len=230 :: toAutoClassifierInput(t){let n=t.files,m=typeof n==="string"?n:Yw(n),r=typeof m==="string"?m:m===bf?nV:(m??[]).filter((c)=>typeof c==="string").join(", "),l=typeof t.caption==="string"?t.caption:"";return l?`${l} [${r}]`:`[${r}]`}
+07 chunk-53rck7h6.js @5623 len=97 :: toAutoClassifierInput(e){return e.file_id?`read inbox message ${e.file_id}`:"read inbox message"}
+08 chunk-5xsw7sqy.js @5601 len=81 :: toAutoClassifierInput(e){return`ask_user=${e.ask_user!==!1}: ${e.condition??""}`}
+09 chunk-78x5hr13.js @24967 len=135 :: toAutoClassifierInput:h("toAutoClassifierInput"),...u("staleServerClassifierContext"),description:h("description"),...u( <NOT A METHOD>
+10 chunk-78x5hr13.js @24992 len=135 :: toAutoClassifierInput"),...u("staleServerClassifierContext"),description:h("description"),...u("getToolUseSummary"),...n <NOT A METHOD>
+11 chunk-7fqews8m.js @4340 len=37 :: toAutoClassifierInput(e){return e.id}
+12 chunk-7h1t1krk.js @14616 len=37 :: toAutoClassifierInput(e){return A(e)}
+13 chunk-7tjrd5mt.js @10955 len=91 :: toAutoClassifierInput(e){return`requeue session=${e.session_id} off runner=${e.runner_id}`}
+14 chunk-7tjrd5mt.js @13343 len=102 :: toAutoClassifierInput(e){return`spawn runner: secret=${e.secret_file_path} base_dir=${e.base_dir??S}`}
+15 chunk-845w7yx9.js @42685 len=137 :: toAutoClassifierInput(n){let e=n,p=[e.subagent_type].filter((h)=>h!==void 0);return`${p.length>0?`(${p.join(", ")}): `:": "}${e.prompt}`}
+16 chunk-898k2gs2.js @133148 len=135 :: toAutoClassifierInput:(e)=>"",userFacingName:(e)=>""};function ed(e,n){let s=new Proxy({},{get:()=>{return}});return n i <NOT A METHOD>
+17 chunk-8mw8jnhw.js @18133 len=234 :: toAutoClassifierInput(e){let a=Array.isArray(e.files)?e.files.join(", "):typeof e.files==="string"?e.files:"[no files]",m=typeof e.message==="string"&&e.message.length>0?` \u2014 message: ${e.message}`:"";return`to ${e.to}: ${a}${m}`}
+18 chunk-8w9chsdq.js @186959 len=135 :: toAutoClassifierInput:()=>"",mapToolResultToToolResultBlockParam:(N,H)=>({type:"tool_result",tool_use_id:H,content:""}), <NOT A METHOD>
+19 chunk-93mkz49v.js @14895 len=79 :: toAutoClassifierInput(e){return e.ws?`websocket ${e.ws.url}${_wo(e.ws)}`:Me(e)}
+20 chunk-9yv1y1tb.js @3129 len=52 :: toAutoClassifierInput(e){return`${v}: ${e.message}`}
+21 chunk-b0k7e9wk.js @93056 len=186 :: toAutoClassifierInput(e){let n=e.dangerouslyDisableSandbox,r=!1,s=ede(e),m=qdt(e);if(s!==void 0||m!==void 0)return{command:e.command,...!1,...s!==void 0&&{[fr]:s},...m};return e.command}
+22 chunk-b2sa2xdg.js @25451 len=58 :: toAutoClassifierInput(){return"read queued notifications"}
+23 chunk-b2sa2xdg.js @27370 len=83 :: toAutoClassifierInput(e){return`share onboarding guide (mode: ${e.mode??"check"})`}
+24 chunk-b2sa2xdg.js @31028 len=60 :: toAutoClassifierInput(){return"show onboarding role picker"}
+25 chunk-b2sa2xdg.js @32366 len=58 :: toAutoClassifierInput(e){return e.task_id??e.shell_id??""}
+26 chunk-b2sa2xdg.js @36381 len=42 :: toAutoClassifierInput(e){return e.message}
+27 chunk-b2sa2xdg.js @40785 len=287 :: toAutoClassifierInput(e){if(e.stop===!0)return"stop the /loop \u2014 cancel pending wakeups, schedule nothing";if(e.delaySeconds==null||e.prompt==null)return`malformed ${El} call missing delaySeconds/prompt \u2014 the tool will reject it`;return`wake in ${e.delaySeconds}s: ${e.prompt}`}
+28 chunk-b2sa2xdg.js @47105 len=40 :: toAutoClassifierInput(e){return e.query}
+29 chunk-b2sa2xdg.js @53748 len=63 :: toAutoClassifierInput(e){return`${e.findings.length} findings`}
+30 chunk-b2sa2xdg.js @64623 len=57 :: toAutoClassifierInput(e){return`${e.todos.length} items`}
+31 chunk-b2sa2xdg.js @67340 len=87 :: toAutoClassifierInput(e){return`list ${e.store??"stores"} ${e.path_prefix??""}`.trim()}
+32 chunk-b2sa2xdg.js @84249 len=41 :: toAutoClassifierInput(e){return e.taskId}
+33 chunk-b2sa2xdg.js @107428 len=45 :: toAutoClassifierInput(e){return e.server??""}
+34 chunk-b2sa2xdg.js @114619 len=51 :: toAutoClassifierInput(e){return e.path??e.name??""}
+35 chunk-b2sa2xdg.js @124558 len=41 :: toAutoClassifierInput(e){return e.action}
+36 chunk-b2sa2xdg.js @132080 len=42 :: toAutoClassifierInput(e){return e.subject}
+37 chunk-b2sa2xdg.js @134255 len=41 :: toAutoClassifierInput(e){return e.taskId}
+38 chunk-b2sa2xdg.js @138554 len=140 :: toAutoClassifierInput(e){let r=RYe(e)?.input??e,n=[r.taskId];if(r.status)n.push(r.status);if(r.subject)n.push(r.subject);return n.join(" ")}
+39 chunk-be990px5.js @4814 len=42 :: toAutoClassifierInput(e){return e.message}
+40 chunk-bv723k46.js @21142 len=81 :: toAutoClassifierInput(e){return{operation:e.operation,arguments:e.arguments??{}}}
+41 chunk-d42xkz0f.js @12142 len=33 :: toAutoClassifierInput(){return""}
+42 chunk-fp04hpn9.js @93061 len=2159 :: toAutoClassifierInput(e){if(e?.action==="read_db"){let n=PS(e.url,"(no artifact url)"),{collection:r}=$1(e),i=r!==void 0?` collection ${iz(Yhe(r,nH))}`:"",s=typeof e.url==="string"?Bt(e.url):null,c=s!==null&&zf(s.slug)?"; requested after an unattended auto-reply notification \u2014 rows are written 
+43 chunk-fp04hpn9.js @95194 len=135 :: toAutoClassifierInput",e)},async description(e,n,r){if(n?.action==="read_db"){let i=typeof n.url==="string"?Bt(n.url):nu <NOT A METHOD>
+44 chunk-hkn13sjq.js @58488 len=275 :: toAutoClassifierInput(e){let r=he();if(r&&typeof e.runId==="string")return r.runOpClassifierInput(e);if(e.script&&e.scriptPath)return`${e.script}\n\nscriptPath: ${e.scriptPath}`;if(e.script&&e.name)return`${e.script}\n\nname: ${e.name}`;return e.script||e.scriptPath||e.name||""}
+45 chunk-j3hkytsv.js @14694 len=1483 :: toAutoClassifierInput(e){let t=Izr,n=ege();try{let r=typeof e==="object"&&e!==null?e.questions:void 0;if(!Array.isArray(r))return"[malformed AskUserQuestion input]";let s=[],a=r.length;if(!Number.isInteger(a)||a<0||a>L)return"[malformed AskUserQuestion input]";for(let c=0;c<a;c++){if(s.length>=D){s.
+46 chunk-jf3ywpc3.js @11865 len=135 :: toAutoClassifierInput:(t)=>a().toAutoClassifierInput(o(t)),staleServerClassifierContext:(t,n,s)=>a().staleServerClassifi <NOT A METHOD>
+47 chunk-jf3ywpc3.js @11896 len=37 :: toAutoClassifierInput(o(t)) <NO BODY>
+48 chunk-jwv1avdp.js @45387 len=882 :: toAutoClassifierInput(s){let g=(O,V)=>V?` [${O}: ${V}]`:"",e=!1,i=(O)=>O,r=xhn(s),_=r!==null&&N(r.input)?r.input:void 0,w=_===void 0?s.summary:typeof _.summary==="string"?_.summary:void 0,S=g("summary",typeof w==="string"?i(w):void 0),D=(_!==void 0&&typeof _.message==="string"?_.message:void 0)??s.m
+49 chunk-k9qm51qy.js @67829 len=1163 :: toAutoClassifierInput(e){if(e?.action==="comments"){let n=typeof e.url==="string"?Bt(e.url):null,s=n!==null&&zf(n.slug)?"read artifact comments (read-only; requested after an unattended auto-reply notification \u2014 the comment text it ingests is written by artifact viewers)":"read artifact comment
+50 chunk-k9qm51qy.js @68966 len=135 :: toAutoClassifierInput",e)},async description(e,n){if(n?.action==="comments"){let s=typeof n.url==="string"?Bt(n.url):nul <NOT A METHOD>
+51 chunk-k9qm51qy.js @93390 len=524 :: toAutoClassifierInput(e){let{url:n,fromUrl:s,ids:r}=Vi(e),h=n!==void 0?Bt(n):null,w=s!==void 0?Bt(s):null,g=h!==null?yt(h.slug):void 0,S=w!==null?yt(w.slug):void 0,T=g?.probeFailed?" [shared-live: unknown]":g!==void 0&&g.mode!=="owner"?` [shared-live: ${g.mode}]`:"",F=r?.length??0;return`copy ${F} r
+52 chunk-k9qm51qy.js @118634 len=270 :: toAutoClassifierInput(e){if(e?.action==="list"){if(nTe(e))return ou(e);let n=sme(e);return n==="mine"?"list artifacts (read-only)":`list artifacts (read-only, scope: ${n} \u2014 includes titles of artifacts other users shared)`}return hi("list.toAutoClassifierInput",e)}
+53 chunk-k9qm51qy.js @118878 len=135 :: toAutoClassifierInput",e)},async description(e,n){if(n?.action==="list"){if(nTe(n))return la(n);let s=sme(n);return s=== <NOT A METHOD>
+54 chunk-k9qm51qy.js @123034 len=157 :: toAutoClassifierInput(e){if(e?.action==="live-edit")return Fs?Fs.classifyLiveEdit(e,df()):"live-edit artifact";return hi("liveEdit.toAutoClassifierInput",e)}
+55 chunk-k9qm51qy.js @123165 len=135 :: toAutoClassifierInput",e)},async description(e,n){if(n?.action==="live-edit"){let s=typeof n.url==="string"?Bt(n.url):nu <NOT A METHOD>
+56 chunk-k9qm51qy.js @125924 len=189 :: toAutoClassifierInput(e){if(e?.action==="open")return`show the user artifact \u2192 ${PS(e.url,"(no artifact url)")} (read-only, changes nothing)`;return hi("open.toAutoClassifierInput",e)}
+57 chunk-k9qm51qy.js @126087 len=135 :: toAutoClassifierInput",e)},async description(e,n){if(n?.action==="open")return`Show the user the artifact ${Ci(n.url,"(n <NOT A METHOD>
+58 chunk-k9qm51qy.js @131692 len=450 :: toAutoClassifierInput(e){let n=typeof e?.url==="string"?Bt(e.url):null,s=n!==null?yt(n.slug):void 0,r=PS(e?.url,"(no artifact url)");return e?.action==="unpin"?`remove an artifact from the user's own pinned list (private to the user, reversible)${WE(s)}${Z2(s)} \u2192 ${r}`:`add an artifact to the u
+59 chunk-k9qm51qy.js @136120 len=38 :: toAutoClassifierInput(e){return ry(e)}
+60 chunk-k9qm51qy.js @204131 len=223 :: toAutoClassifierInput(e){let n=$o(e??{});return`preview local file ${n===void 0?"(none)":`"${qw(n)}"`} (read-only render; nothing uploaded; the page's requests are refused except Google Fonts; pop-ups and WebRTC disabled)`}
+61 chunk-k9qm51qy.js @211704 len=533 :: toAutoClassifierInput(e){if(e?.action==="room_send"){let n=PS(e.url,"(no artifact url)"),s=typeof e.url==="string"?Bt(e.url):null,r=s!==null?yt(s.slug):void 0,h=`${WE(r)}${sB(r)}`;try{let{topic:w,data:g}=CKe(e),S=TRt(w,(F)=>`"${F}"`),T=g!==void 0?` data: ${iz(Ote(g))}`:"";return`broadcast a live eve
+62 chunk-k9qm51qy.js @212211 len=135 :: toAutoClassifierInput",e)},async description(e,n){if(n?.action==="room_send"){let s=typeof n.url==="string"?Bt(n.url):nu <NOT A METHOD>
+63 chunk-k9qm51qy.js @224196 len=636 :: toAutoClassifierInput(e){if(e?.action!=="share")return hi("share.toAutoClassifierInput",e);let n=typeof e.url==="string"?Bt(e.url):null,s=n!==null?yt(n.slug):void 0,r=PS(e.url,"(no artifact url)");try{let{mode:h,people:w,access:g}=RKe(e),S=h==="org"?"everyone in the user's organization":h==="people"
+64 chunk-k9qm51qy.js @224261 len=135 :: toAutoClassifierInput",e);let n=typeof e.url==="string"?Bt(e.url):null,s=n!==null?yt(n.slug):void 0,r=PS(e.url,"(no arti <NOT A METHOD>
+65 chunk-k9qm51qy.js @230017 len=321 :: toAutoClassifierInput(e){let n=Nn?Nn.handlersHandler.toAutoClassifierInput?.(e):void 0;if(n!==void 0)return n;return e?.action==="get_endpoints"?"list artifact endpoints":e?.action==="call_endpoint"?"call an artifact endpoint":e?.action==="run_script"?"run a script on an artifact":hi("handlers.toAut
+66 chunk-k9qm51qy.js @230070 len=135 :: toAutoClassifierInput?.(e):void 0;if(n!==void 0)return n;return e?.action==="get_endpoints"?"list artifact endpoints":e? <NOT A METHOD>
+67 chunk-k9qm51qy.js @230312 len=135 :: toAutoClassifierInput",e)},async description(e,n,s){let r=Nn?Nn.handlersHandler.description:void 0;return r?r(e,n,s):"Us <NOT A METHOD>
+68 chunk-k9qm51qy.js @251506 len=2012 :: toAutoClassifierInput(e){if(e?.action==="watch"||e?.action==="unwatch"){let n=PS(e.url,"(no artifact url)");if(e.action==="unwatch")return`stop watching artifact \u2192 ${n}`;let s=typeof e.url==="string"?Bt(e.url):null;tK();let r=s!==null&&X().durable.stopLatches.isStopped(s.slug),h=sB(s!==null?yt(
+69 chunk-k9qm51qy.js @253492 len=135 :: toAutoClassifierInput",e)},async description(e,n){if(n?.action==="watch"){let s=typeof n.url==="string"?Bt(n.url):null;r <NOT A METHOD>
+70 chunk-k9qm51qy.js @463130 len=10537 :: toAutoClassifierInput(e){try{e=(typeof e==="object"||typeof e==="function")&&e!==null?{...e}:{}}catch{e={}}let n=Zr(e);if(n?.toAutoClassifierInput)return n.toAutoClassifierInput(e);if(se!=null)e=se.fillShimUrl(e);if(e?.action==="read"){let Se=qx(e.url),H=Se!==null?yt(Se.slug):void 0;return`read arti
+71 chunk-k9qm51qy.js @463255 len=135 :: toAutoClassifierInput)return n.toAutoClassifierInput(e);if(se!=null)e=se.fillShimUrl(e);if(e?.action==="read"){let Se=qx <NOT A METHOD>
+72 chunk-k9qm51qy.js @463286 len=34 :: toAutoClassifierInput(e) <NO BODY>
+73 chunk-msqseqys.js @88457 len=45 :: toAutoClassifierInput(J){return Mn(J,z.name)}
+74 chunk-nhn4x22d.js @106781 len=47 :: toAutoClassifierInput(me){return ba(me,X.name)}
+75 chunk-phc04ptg.js @49062 len=225 :: toAutoClassifierInput(e){let n=nw(e.path),r=e.store===xRe?Rt(n):null,s=r===null?"":` (stores to ${Rn(r)}, outside the memory directory Claude Code saves to without asking)`;return`write ${e.store}:${n}${s}: ${eL(e.content)}`}
+76 chunk-q7d71vwn.js @10121 len=33 :: toAutoClassifierInput(){return""}
+77 chunk-qec902z2.js @20539 len=135 :: toAutoClassifierInput:({skill:e})=>e??"",create(e){let n=e;return{async validateInput({skill:s}){let r=s.trim();if(!r)re <NOT A METHOD>
+78 chunk-v15exdkc.js @36032 len=136 :: toAutoClassifierInput(e){return`${e.skill===void 0?"sdk: built-in":`skill: ${e.skill}`}\nartifact: ${e.artifact??St(e.skill)}\n${e.code}`}
+79 chunk-wgfrtm7w.js @749044 len=146 :: toAutoClassifierInput(e){let n=ede(e);return n===void 0?`${e.file_path}: ${e.content}`:{file_path:e.file_path,content:e.content,[fr]:n,...JSe(e)}}
+80 chunk-wgfrtm7w.js @932456 len=109 :: toAutoClassifierInput(e){let n=ede(e);return n===void 0?e.file_path:{file_path:e.file_path,[fr]:n,...JSe(e)}}
+81 chunk-wgfrtm7w.js @959868 len=137 :: toAutoClassifierInput(e){let n=ede(e);return n===void 0?e.pattern:{pattern:e.pattern,...e.path!==void 0&&{path:e.path},[fr]:n,...JSe(e)}}
+82 chunk-wgfrtm7w.js @965138 len=172 :: toAutoClassifierInput(e){let n=ede(e);return n===void 0?e.path?`${e.pattern} in ${e.path}`:e.pattern:{pattern:e.pattern,...e.path!==void 0&&{path:e.path},[fr]:n,...JSe(e)}}
+83 chunk-wgfrtm7w.js @976436 len=59 :: toAutoClassifierInput(e){return`read ${e.store}:${e.path}`}
+84 chunk-wgfrtm7w.js @1395994 len=71 :: toAutoClassifierInput(e){return e.prompt?`${e.url}: ${e.prompt}`:e.url}
+85 chunk-wgfrtm7w.js @2698847 len=34 :: toAutoClassifierInput(r) <NO BODY>
+86 chunk-wgfrtm7w.js @2698894 len=135 :: toAutoClassifierInput failed for ${Yc(e)}: errorChars=${l(h).length}`),i("tengu_auto_mode_malformed_tool_input",{toolNam <NOT A METHOD>
+87 chunk-wgfrtm7w.js @2737440 len=135 :: toAutoClassifierInput:(ye)=>ye},H=await fde(_i(r),w,[...s,B],g,h,{...S,severityEligible:!0,severitySite:{key:"sandboxNet <NOT A METHOD>
+88 chunk-wgfrtm7w.js @2769900 len=135 :: toAutoClassifierInput is empty), and only the classifier can allow it. This is a tool bug, not a judgment on the action. <NOT A METHOD>
+89 chunk-wgfrtm7w.js @3917772 len=406 :: toAutoClassifierInput(e){let n=ede(e);if(!xhe())return n===void 0?`${e.file_path}: ${e.new_string}`:{file_path:e.file_path,new_string:e.new_string,[fr]:n,...JSe(e)};let r=jfn(),s=e.old_string,g=r>0&&typeof s==="string"&&s.length>r;return{file_path:e.file_path,adds:e.new_string,removes:g?s.slice(0,r)
+90 chunk-wgfrtm7w.js @3932179 len=330 :: toAutoClassifierInput(e){let n=e.edit_mode??"replace";if(!xhe())return`${e.notebook_path} ${n}: ${e.new_source}`;return{notebook_path:e.notebook_path,mode:n,...e.cell_id!==void 0&&{cell_id:e.cell_id},...n!=="delete"&&e.cell_type!==void 0&&{cell_type:e.cell_type},...n==="delete"?{ignored_source:e.new
+91 chunk-wgfrtm7w.js @4081887 len=249 :: toAutoClassifierInput(e){let n=e.dangerouslyDisableSandbox,r=!1,s=wh()?n3(e).requested:void 0,g=s!==void 0&&!ev(s)?Zv(s)||void 0:void 0,h=qdt(e);if(g!==void 0||h!==void 0)return{command:e.command,...!1,...g!==void 0&&{[fr]:g},...h};return e.command}
+92 chunk-wrz5dtzz.js @3707 len=135 :: toAutoClassifierInput:()=>e,userFacingName:()=>`${e} - authenticate (MCP)`,maxResultSizeChars:1e4,renderToolUseMessage:( <NOT A METHOD>
+93 chunk-wrz5dtzz.js @8999 len=135 :: toAutoClassifierInput:()=>e,userFacingName:()=>`${e} - complete authentication (MCP)`,maxResultSizeChars:1e4,renderToolU <NOT A METHOD>
+94 chunk-yn7he971.js @15129 len=34 :: toAutoClassifierInput(e){return e}
+95 chunk-z576tem3.js @1715 len=45 :: toAutoClassifierInput(e){return e.server??""}
+96 chunk-z576tem3.js @4049 len=54 :: toAutoClassifierInput(e){return`${e.server} ${e.uri}`}
+97 chunk-z576tem3.js @6673 len=54 :: toAutoClassifierInput(e){return`${e.server} ${e.uri}`}

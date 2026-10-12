@@ -3,7 +3,9 @@ Pilot 10K generator — §11 categories, §12 balance, §13 minimal pairs, §14 
 Lean, no bloat: templates + deterministic RNG, emits JSONL ready for SFTDataset.
 """
 from __future__ import annotations
-import json, random, hashlib
+import json
+import random
+import hashlib
 from pathlib import Path
 from collections import Counter
 

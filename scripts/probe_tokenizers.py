@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Probe prompt with multiple tokenizers; emit tokenization.json"""
 from pathlib import Path
-import sys, json, argparse
+import sys
+import json
+import argparse
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src.prompt.builder import PromptBuilder
 from src.prompt.tokenizer_probe import probe_many

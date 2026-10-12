@@ -1,0 +1,732 @@
+[
+ {
+  "file": "chunk-0z420tav.js",
+  "off": 4392,
+  "name": "ListAgents",
+  "ident": "Wl",
+  "has": true,
+  "aliases": "Rzo",
+  "size": 961,
+  "snippet": "toAutoClassifierInput(){return\"list agents\"},async description(e,{tools:t}){return bzr({canSendMessages:GY(t)})},userFacingName(){return\"ListAgents\"},isEnabled(){return ci()},get i"
+ },
+ {
+  "file": "chunk-19rk5k5f.js",
+  "off": 16413,
+  "name": "DesignSync",
+  "ident": "WUt",
+  "has": true,
+  "aliases": null,
+  "size": 6449,
+  "snippet": "toAutoClassifierInput(n){if(n.method===\"finalize_plan\"){let e=(i)=>{let r=i??[],s=50;if(r.length<=50)return r.join(\", \");return`${r.length} paths (too many to list here; the user's"
+ },
+ {
+  "file": "chunk-1y6g10ys.js",
+  "off": 4751,
+  "name": "CronCreate",
+  "ident": "xm",
+  "has": true,
+  "aliases": null,
+  "size": 1904,
+  "snippet": "toAutoClassifierInput(e){return`${e.cron}: ${e.prompt}`},async description(){return Szr(spe())},async prompt(){return vzr(spe())},getPath(){return aSe()},create(e){return{async che"
+ },
+ {
+  "file": "chunk-28888bb3.js",
+  "off": 13097,
+  "name": "propose_skills",
+  "ident": "poe",
+  "has": true,
+  "aliases": null,
+  "size": 3435,
+  "snippet": "toAutoClassifierInput(e){return(e.proposals??[]).map((n)=>n.kind===\"improvement\"&&n.target?`${n.name??\"\"} (improves ${n.target}): ${n.description??\"\"}`:`${n.name??\"\"}: ${n.descript"
+ },
+ {
+  "file": "chunk-28ad3xcx.js",
+  "off": 4222,
+  "name": "SearchMcpRegistry",
+  "ident": "AOt",
+  "has": false,
+  "aliases": null,
+  "size": 853,
+  "snippet": null
+ },
+ {
+  "file": "chunk-2dk1sr5c.js",
+  "off": 80827,
+  "name": "ExitPlanMode",
+  "ident": "hu",
+  "has": false,
+  "aliases": null,
+  "size": 4991,
+  "snippet": null
+ },
+ {
+  "file": "chunk-2yr4r0q6.js",
+  "off": 6799,
+  "name": "SendUserFile",
+  "ident": "cy",
+  "has": true,
+  "aliases": null,
+  "size": 6404,
+  "snippet": "toAutoClassifierInput(t){let n=t.files,m=typeof n===\"string\"?n:Yw(n),r=typeof m===\"string\"?m:m===bf?nV:(m??[]).filter((c)=>typeof c===\"string\").join(\", \"),l=typeof t.caption===\"str"
+ },
+ {
+  "file": "chunk-3pdq8jba.js",
+  "off": 4121,
+  "name": "ObserverReport",
+  "ident": "ie",
+  "has": false,
+  "aliases": null,
+  "size": 1601,
+  "snippet": null
+ },
+ {
+  "file": "chunk-53rck7h6.js",
+  "off": 5258,
+  "name": "FetchInboxMessage",
+  "ident": "C3e",
+  "has": true,
+  "aliases": null,
+  "size": 4069,
+  "snippet": "toAutoClassifierInput(e){return e.file_id?`read inbox message ${e.file_id}`:\"read inbox message\"},async description(e,{tools:n}){return BBn(d(n))},async prompt({tools:e}){return jB"
+ },
+ {
+  "file": "chunk-5xsw7sqy.js",
+  "off": 5199,
+  "name": "ProposeGoal",
+  "ident": "ryn",
+  "has": true,
+  "aliases": null,
+  "size": 4212,
+  "snippet": "toAutoClassifierInput(e){return`ask_user=${e.ask_user!==!1}: ${e.condition??\"\"}`},async description(){return xzo},async prompt(){return Pzo},renderToolUseMessage(e){if(!e.condition"
+ },
+ {
+  "file": "chunk-7fqews8m.js",
+  "off": 4141,
+  "name": "CronDelete",
+  "ident": "UE",
+  "has": true,
+  "aliases": null,
+  "size": 856,
+  "snippet": "toAutoClassifierInput(e){return e.id},async description(){return Ezr},async prompt(){return kzr(spe())},getPath(){return aSe()},create(){return{async validateInput(e){let r=(await "
+ },
+ {
+  "file": "chunk-7h1t1krk.js",
+  "off": 13966,
+  "name": "Projects",
+  "ident": "H",
+  "has": true,
+  "aliases": null,
+  "size": 1891,
+  "snippet": "toAutoClassifierInput(e){return A(e)},renderToolUseMessage(e){return A(e)},coerceInput:W,create(e){return{async validateInput(t){let r=pe[t.method].filter((i)=>t[i]===void 0);if(r."
+ },
+ {
+  "file": "chunk-7tjrd5mt.js",
+  "off": 4215,
+  "name": "self_hosted_runner_get_pool",
+  "ident": "_Ar",
+  "has": false,
+  "aliases": null,
+  "size": 740,
+  "snippet": null
+ },
+ {
+  "file": "chunk-7tjrd5mt.js",
+  "off": 5199,
+  "name": "self_hosted_runner_list_sessions",
+  "ident": "SAr",
+  "has": false,
+  "aliases": null,
+  "size": 831,
+  "snippet": null
+ },
+ {
+  "file": "chunk-7tjrd5mt.js",
+  "off": 6180,
+  "name": "self_hosted_runner_list_runners",
+  "ident": "bAr",
+  "has": false,
+  "aliases": null,
+  "size": 763,
+  "snippet": null
+ },
+ {
+  "file": "chunk-7tjrd5mt.js",
+  "off": 7093,
+  "name": "self_hosted_runner_list_secrets",
+  "ident": "wAr",
+  "has": false,
+  "aliases": null,
+  "size": 773,
+  "snippet": null
+ },
+ {
+  "file": "chunk-7tjrd5mt.js",
+  "off": 8088,
+  "name": "self_hosted_runner_read_health",
+  "ident": "EAr",
+  "has": false,
+  "aliases": null,
+  "size": 654,
+  "snippet": null
+ },
+ {
+  "file": "chunk-7tjrd5mt.js",
+  "off": 9507,
+  "name": "self_hosted_runner_read_metrics",
+  "ident": "kAr",
+  "has": false,
+  "aliases": null,
+  "size": 715,
+  "snippet": null
+ },
+ {
+  "file": "chunk-7tjrd5mt.js",
+  "off": 10620,
+  "name": "self_hosted_runner_requeue_session",
+  "ident": "AAr",
+  "has": true,
+  "aliases": null,
+  "size": 1316,
+  "snippet": "toAutoClassifierInput(e){return`requeue session=${e.session_id} off runner=${e.runner_id}`},async description(){return gBn},async prompt(){return gBn},create(e){return{async checkP"
+ },
+ {
+  "file": "chunk-7tjrd5mt.js",
+  "off": 13015,
+  "name": "self_hosted_runner_spawn_local",
+  "ident": "vAr",
+  "has": true,
+  "aliases": null,
+  "size": 1819,
+  "snippet": "toAutoClassifierInput(e){return`spawn runner: secret=${e.secret_file_path} base_dir=${e.base_dir??S}`},async description(){return uBn},async prompt(){return uBn},create(e){return{a"
+ },
+ {
+  "file": "chunk-7tjrd5mt.js",
+  "off": 15121,
+  "name": "self_hosted_runner_tail_log",
+  "ident": "TAr",
+  "has": false,
+  "aliases": null,
+  "size": 871,
+  "snippet": null
+ },
+ {
+  "file": "chunk-8mw8jnhw.js",
+  "off": 17804,
+  "name": "SendFile",
+  "ident": "l7",
+  "has": true,
+  "aliases": null,
+  "size": 8734,
+  "snippet": "toAutoClassifierInput(e){let a=Array.isArray(e.files)?e.files.join(\", \"):typeof e.files===\"string\"?e.files:\"[no files]\",m=typeof e.message===\"string\"&&e.message.length>0?` \\u2014 m"
+ },
+ {
+  "file": "chunk-9yv1y1tb.js",
+  "off": 2781,
+  "name": "SubagentHandback",
+  "ident": "Vw",
+  "has": true,
+  "aliases": null,
+  "size": 2458,
+  "snippet": "toAutoClassifierInput(e){return`${v}: ${e.message}`},create(e){return{async validateInput(t){if(t.message.trim().length===0)return{result:!1,message:\"message must not be empty\",err"
+ },
+ {
+  "file": "chunk-ad1k2ank.js",
+  "off": 4464,
+  "name": "ListConnectors",
+  "ident": "SOt",
+  "has": false,
+  "aliases": null,
+  "size": 881,
+  "snippet": null
+ },
+ {
+  "file": "chunk-ays13mbr.js",
+  "off": 4199,
+  "name": "CronList",
+  "ident": "Kxe",
+  "has": false,
+  "aliases": null,
+  "size": 899,
+  "snippet": null
+ },
+ {
+  "file": "chunk-b0k7e9wk.js",
+  "off": 92423,
+  "name": "PowerShell",
+  "ident": "St",
+  "has": true,
+  "aliases": null,
+  "size": 9136,
+  "snippet": "toAutoClassifierInput(e){let n=e.dangerouslyDisableSandbox,r=!1,s=ede(e),m=qdt(e);if(s!==void 0||m!==void 0)return{command:e.command,...!1,...s!==void 0&&{[fr]:s},...m};return e.co"
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 25071,
+  "name": "ReadNotifications",
+  "ident": "i$",
+  "has": true,
+  "aliases": null,
+  "size": 1088,
+  "snippet": "toAutoClassifierInput(){return\"read queued notifications\"},create({agentId:e,queuedNotificationsRegistry:r}){return{async call(n){if(e!==void 0)throw Error(\"ReadNotifications can o"
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 27050,
+  "name": "ShareOnboardingGuide",
+  "ident": "dSe",
+  "has": true,
+  "aliases": null,
+  "size": 2395,
+  "snippet": "toAutoClassifierInput(e){return`share onboarding guide (mode: ${e.mode??\"check\"})`},isDestructive(e){return e.mode===\"delete\"},renderToolUseMessage(e){return e.mode&&e.mode!==\"chec"
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 30676,
+  "name": "ShowOnboardingRolePicker",
+  "ident": "ope",
+  "has": true,
+  "aliases": null,
+  "size": 795,
+  "snippet": "toAutoClassifierInput(){return\"show onboarding role picker\"},create(){return{async checkPermissions(e){return{behavior:\"ask\",message:\"Pick your role?\",updatedInput:{}}},async call("
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 32037,
+  "name": "TaskStop",
+  "ident": "Ic",
+  "has": true,
+  "aliases": "\"KillShell\",\"KillBash\"",
+  "size": 2145,
+  "snippet": "toAutoClassifierInput(e){return e.task_id??e.shell_id??\"\"},async description(){return\"Stop a running background task by ID\"},async prompt(){return Nzo},mapToolResultToToolResultBlo"
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 36023,
+  "name": "SendUserMessage",
+  "ident": "tf",
+  "has": true,
+  "aliases": "Mqt",
+  "size": 2243,
+  "snippet": "toAutoClassifierInput(e){return e.message},async description(){return XXr},async prompt(){return XM()?JXr:QXr},mapToolResultToToolResultBlockParam(e,r){let n=e.attachments??[],s=n."
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 40127,
+  "name": "ScheduleWakeup",
+  "ident": "El",
+  "has": true,
+  "aliases": null,
+  "size": 86795,
+  "snippet": "toAutoClassifierInput(e){if(e.stop===!0)return\"stop the /loop \\u2014 cancel pending wakeups, schedule nothing\";if(e.delaySeconds==null||e.prompt==null)return`malformed ${El} call m"
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 53444,
+  "name": "ReportFindings",
+  "ident": "ZP",
+  "has": true,
+  "aliases": null,
+  "size": 778,
+  "snippet": "toAutoClassifierInput(e){return`${e.findings.length} findings`},userFacingName(){return\"Code review\"},renderToolUseMessage(e){let r=e.findings?.length??0;return`${e.level??\"review\""
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 64289,
+  "name": "TodoWrite",
+  "ident": "TC",
+  "has": true,
+  "aliases": null,
+  "size": 862,
+  "snippet": "toAutoClassifierInput(e){return`${e.todos.length} items`},renderToolUseMessage(){return null},create(e){return{async call({todos:r}){let n=e.agentId??q(),s=e.todos.get(n)??[],p=r.e"
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 65203,
+  "name": "TestingPermission",
+  "ident": "go",
+  "has": false,
+  "aliases": null,
+  "size": 669,
+  "snippet": null
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 66977,
+  "name": "memory_list",
+  "ident": "__",
+  "has": true,
+  "aliases": null,
+  "size": 2903,
+  "snippet": "toAutoClassifierInput(e){return`list ${e.store??\"stores\"} ${e.path_prefix??\"\"}`.trim()},renderToolUseMessage(e){return due(e.store,e.path_prefix)},extractSearchText(){return\"\"},get"
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 76999,
+  "name": "SendFeedback",
+  "ident": "Co",
+  "has": false,
+  "aliases": null,
+  "size": 3987,
+  "snippet": null
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 83905,
+  "name": "GetTask",
+  "ident": "Zm",
+  "has": true,
+  "aliases": null,
+  "size": 2101,
+  "snippet": "toAutoClassifierInput(e){return e.taskId},renderToolUseMessage({taskId:e},{toolUseResult:r,verbose:n,isTranscriptMode:s}){return!n&&!s&&(Uce(r)?.status===\"working\"||r===`Error: ${n"
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 98449,
+  "name": "LSP",
+  "ident": "OD",
+  "has": false,
+  "aliases": null,
+  "size": 3983,
+  "snippet": null
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 114197,
+  "name": "EnterWorktree",
+  "ident": "DO",
+  "has": true,
+  "aliases": null,
+  "size": 4876,
+  "snippet": "toAutoClassifierInput(e){return e.path??e.name??\"\"},renderToolUseMessage({name:e,path:r}){return(r!==void 0?nr(r):null)??e??\"\"},create(e){return{async validateInput(r){if(Ume()){if"
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 124063,
+  "name": "ExitWorktree",
+  "ident": "qxe",
+  "has": true,
+  "aliases": null,
+  "size": 4759,
+  "snippet": "toAutoClassifierInput(e){return e.action},renderToolUseMessage(){return\"\"},create(e){return{async validateInput(r){if(Ume())return{result:!1,message:'ExitWorktree cannot be called "
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 131709,
+  "name": "TaskCreate",
+  "ident": "Wv",
+  "has": true,
+  "aliases": null,
+  "size": 1227,
+  "snippet": "toAutoClassifierInput(e){return e.subject},renderToolUseMessage(){return null},create(e){return{async call({subject:r,description:n,activeForm:s,metadata:p},{signal:g,onProgress:h}"
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 133916,
+  "name": "TaskGet",
+  "ident": "r8",
+  "has": true,
+  "aliases": null,
+  "size": 1108,
+  "snippet": "toAutoClassifierInput(e){return e.taskId},renderToolUseMessage(){return null},create({storageV5:e}){return{async call({taskId:r}){let n=jv(),s=await O4(n,r,e);if(!s)return{data:{ta"
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 138227,
+  "name": "TaskUpdate",
+  "ident": "Qk",
+  "has": true,
+  "aliases": null,
+  "size": 3059,
+  "snippet": "toAutoClassifierInput(e){let r=RYe(e)?.input??e,n=[r.taskId];if(r.status)n.push(r.status);if(r.subject)n.push(r.subject);return n.join(\" \")},renderToolUseMessage(){return null},cre"
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 143155,
+  "name": "TaskList",
+  "ident": "tA",
+  "has": false,
+  "aliases": null,
+  "size": 1072,
+  "snippet": null
+ },
+ {
+  "file": "chunk-be990px5.js",
+  "off": 4446,
+  "name": "PushNotification",
+  "ident": "AC",
+  "has": true,
+  "aliases": null,
+  "size": 2247,
+  "snippet": "toAutoClassifierInput(e){return e.message},async description(){return Fzo},async prompt(){return Uzo()},mapToolResultToToolResultBlockParam(e,t){let n;if(e.disabledReason===\"config"
+ },
+ {
+  "file": "chunk-bv723k46.js",
+  "off": 20578,
+  "name": "ClaudeDesign",
+  "ident": "JG",
+  "has": true,
+  "aliases": null,
+  "size": 20323,
+  "snippet": "toAutoClassifierInput(e){return{operation:e.operation,arguments:e.arguments??{}}},create(e){return{async validateInput(t){let d=le(t.operation,t.arguments);if(d)return{result:!1,me"
+ },
+ {
+  "file": "chunk-d42xkz0f.js",
+  "off": 11794,
+  "name": null,
+  "ident": "e",
+  "has": true,
+  "aliases": null,
+  "size": 818,
+  "snippet": "toAutoClassifierInput(){return\"\"},renderToolUseMessage(){return null},create(a){return{async call(h,{parentMessage:k}){let c=nD();if(v&&a.agentId===void 0&&c.status===\"active\"){if("
+ },
+ {
+  "file": "chunk-hkn13sjq.js",
+  "off": 57961,
+  "name": "Workflow",
+  "ident": "Bd",
+  "has": true,
+  "aliases": "\"RunWorkflow\"",
+  "size": 9226,
+  "snippet": "toAutoClassifierInput(e){let r=he();if(r&&typeof e.runId===\"string\")return r.runOpClassifierInput(e);if(e.script&&e.scriptPath)return`${e.script}\n\nscriptPath: ${e.scriptPath}`;if(e"
+ },
+ {
+  "file": "chunk-j3hkytsv.js",
+  "off": 12694,
+  "name": "AskUserQuestion",
+  "ident": "Vs",
+  "has": true,
+  "aliases": null,
+  "size": 6698,
+  "snippet": "toAutoClassifierInput(e){let t=Izr,n=ege();try{let r=typeof e===\"object\"&&e!==null?e.questions:void 0;if(!Array.isArray(r))return\"[malformed AskUserQuestion input]\";let s=[],a=r.le"
+ },
+ {
+  "file": "chunk-jf3ywpc3.js",
+  "off": 10012,
+  "name": null,
+  "ident": "e",
+  "has": true,
+  "aliases": null,
+  "size": 2456,
+  "snippet": "toAutoClassifierInput:(t)=>a().toAutoClassifierInput(o(t)),staleServerClassifierContext:(t,n,s)=>a().staleServerClassifierContext(o(t),n,s),description:(t,...n)=>a().description(o("
+ },
+ {
+  "file": "chunk-jwv1avdp.js",
+  "off": 44609,
+  "name": "SendMessage",
+  "ident": "no",
+  "has": true,
+  "aliases": null,
+  "size": 39804,
+  "snippet": "toAutoClassifierInput(s){let g=(O,V)=>V?` [${O}: ${V}]`:\"\",e=!1,i=(O)=>O,r=xhn(s),_=r!==null&&N(r.input)?r.input:void 0,w=_===void 0?s.summary:typeof _.summary===\"string\"?_.summary"
+ },
+ {
+  "file": "chunk-phc04ptg.js",
+  "off": 48769,
+  "name": "memory_write",
+  "ident": "Oc",
+  "has": true,
+  "aliases": null,
+  "size": 3979,
+  "snippet": "toAutoClassifierInput(e){let n=nw(e.path),r=e.store===xRe?Rt(n):null,s=r===null?\"\":` (stores to ${Rn(r)}, outside the memory directory Claude Code saves to without asking)`;return`"
+ },
+ {
+  "file": "chunk-q7d71vwn.js",
+  "off": 9669,
+  "name": "EndConversation",
+  "ident": "xC",
+  "has": true,
+  "aliases": null,
+  "size": 1447,
+  "snippet": "toAutoClassifierInput(){return\"\"},renderToolUseMessage(){return null},mapToolResultToToolResultBlockParam(e,c){return{tool_use_id:c,type:\"tool_result\",content:e.message}},create(e)"
+ },
+ {
+  "file": "chunk-qec902z2.js",
+  "off": 6508,
+  "name": "EnterPlanMode",
+  "ident": "wx",
+  "has": false,
+  "aliases": null,
+  "size": 1578,
+  "snippet": null
+ },
+ {
+  "file": "chunk-qec902z2.js",
+  "off": 20278,
+  "name": "Skill",
+  "ident": "ko",
+  "has": true,
+  "aliases": null,
+  "size": 7155,
+  "snippet": "toAutoClassifierInput:({skill:e})=>e??\"\",create(e){let n=e;return{async validateInput({skill:s}){let r=s.trim();if(!r)return m(\"skill_invoke\",\"skill_invoke_empty_name\"),{result:!1,"
+ },
+ {
+  "file": "chunk-sa3mgv8b.js",
+  "off": 10066,
+  "name": "Poll",
+  "ident": "eg",
+  "has": false,
+  "aliases": null,
+  "size": 1370,
+  "snippet": null
+ },
+ {
+  "file": "chunk-tvd88b8g.js",
+  "off": 8667,
+  "name": null,
+  "ident": "e",
+  "has": false,
+  "aliases": null,
+  "size": 572,
+  "snippet": null
+ },
+ {
+  "file": "chunk-tvd88b8g.js",
+  "off": 15124,
+  "name": "SuggestPluginInstall",
+  "ident": "Zxe",
+  "has": false,
+  "aliases": null,
+  "size": 1057,
+  "snippet": null
+ },
+ {
+  "file": "chunk-tvd88b8g.js",
+  "off": 17094,
+  "name": "SuggestSkills",
+  "ident": "w1t",
+  "has": false,
+  "aliases": null,
+  "size": 2143,
+  "snippet": null
+ },
+ {
+  "file": "chunk-tvd88b8g.js",
+  "off": 19297,
+  "name": null,
+  "ident": "e",
+  "has": false,
+  "aliases": null,
+  "size": 1038,
+  "snippet": null
+ },
+ {
+  "file": "chunk-v15exdkc.js",
+  "off": 35620,
+  "name": "AppifactRepl",
+  "ident": "gJe",
+  "has": true,
+  "aliases": null,
+  "size": 2868,
+  "snippet": "toAutoClassifierInput(e){return`${e.skill===void 0?\"sdk: built-in\":`skill: ${e.skill}`}\nartifact: ${e.artifact??St(e.skill)}\n${e.code}`},renderToolUseMessage(e,{verbose:n}){let r=A"
+ },
+ {
+  "file": "chunk-wgfrtm7w.js",
+  "off": 747955,
+  "name": "Write",
+  "ident": "dn",
+  "has": true,
+  "aliases": null,
+  "size": 5198,
+  "snippet": "toAutoClassifierInput(e){let n=ede(e);return n===void 0?`${e.file_path}: ${e.content}`:{file_path:e.file_path,content:e.content,[fr]:n,...JSe(e)}},suppressesAllPermissionUpdates(e)"
+ },
+ {
+  "file": "chunk-wgfrtm7w.js",
+  "off": 931542,
+  "name": "Read",
+  "ident": "ut",
+  "has": true,
+  "aliases": null,
+  "size": 5480,
+  "snippet": "toAutoClassifierInput(e){let n=ede(e);return n===void 0?e.file_path:{file_path:e.file_path,[fr]:n,...JSe(e)}},suppressesAllPermissionUpdates(e){return xd(e)},isSearchOrReadCommand("
+ },
+ {
+  "file": "chunk-wgfrtm7w.js",
+  "off": 959437,
+  "name": "Glob",
+  "ident": "co",
+  "has": true,
+  "aliases": null,
+  "size": 2105,
+  "snippet": "toAutoClassifierInput(e){let n=ede(e);return n===void 0?e.pattern:{pattern:e.pattern,...e.path!==void 0&&{path:e.path},[fr]:n,...JSe(e)}},suppressesAllPermissionUpdates(e){return x"
+ },
+ {
+  "file": "chunk-wgfrtm7w.js",
+  "off": 964690,
+  "name": "Grep",
+  "ident": "Zr",
+  "has": true,
+  "aliases": null,
+  "size": 2840,
+  "snippet": "toAutoClassifierInput(e){let n=ede(e);return n===void 0?e.path?`${e.pattern} in ${e.path}`:e.pattern:{pattern:e.pattern,...e.path!==void 0&&{path:e.path},[fr]:n,...JSe(e)}},suppres"
+ },
+ {
+  "file": "chunk-wgfrtm7w.js",
+  "off": 976084,
+  "name": "memory_read",
+  "ident": "Kf",
+  "has": true,
+  "aliases": null,
+  "size": 2147,
+  "snippet": "toAutoClassifierInput(e){return`read ${e.store}:${e.path}`},renderToolUseMessage(e){return due(e.store,e.path)},extractSearchText(){return\"\"},getActivityDescription(e){return due(\""
+ },
+ {
+  "file": "chunk-wgfrtm7w.js",
+  "off": 1395339,
+  "name": "WebFetch",
+  "ident": "_r",
+  "has": true,
+  "aliases": null,
+  "size": 13615,
+  "snippet": "toAutoClassifierInput(e){return e.prompt?`${e.url}: ${e.prompt}`:e.url},renderToolUseMessage({url:e,prompt:n},{verbose:r}){if(!e)return null;if(r)return`url: \"${e}\"${r&&n?`, prompt"
+ },
+ {
+  "file": "chunk-wgfrtm7w.js",
+  "off": 3916928,
+  "name": "Edit",
+  "ident": "Et",
+  "has": true,
+  "aliases": null,
+  "size": 7049,
+  "snippet": "toAutoClassifierInput(e){let n=ede(e);if(!xhe())return n===void 0?`${e.file_path}: ${e.new_string}`:{file_path:e.file_path,new_string:e.new_string,[fr]:n,...JSe(e)};let r=jfn(),s=e"
+ },
+ {
+  "file": "chunk-wgfrtm7w.js",
+  "off": 3931636,
+  "name": "NotebookEdit",
+  "ident": "Ka",
+  "has": true,
+  "aliases": null,
+  "size": 6527,
+  "snippet": "toAutoClassifierInput(e){let n=e.edit_mode??\"replace\";if(!xhe())return`${e.notebook_path} ${n}: ${e.new_source}`;return{notebook_path:e.notebook_path,mode:n,...e.cell_id!==void 0&&"
+ },
+ {
+  "file": "chunk-wgfrtm7w.js",
+  "off": 4080965,
+  "name": "Bash",
+  "ident": "Ue",
+  "has": true,
+  "aliases": null,
+  "size": 14554,
+  "snippet": "toAutoClassifierInput(e){let n=e.dangerouslyDisableSandbox,r=!1,s=wh()?n3(e).requested:void 0,g=s!==void 0&&!ev(s)?Zv(s)||void 0:void 0,h=qdt(e);if(g!==void 0||h!==void 0)return{co"
+ },
+ {
+  "file": "chunk-x7amc0ky.js",
+  "off": 4207,
+  "name": "SuggestConnectors",
+  "ident": "COt",
+  "has": false,
+  "aliases": null,
+  "size": 834,
+  "snippet": null
+ },
+ {
+  "file": "chunk-yn7he971.js",
+  "off": 14656,
+  "name": "RemoteTrigger",
+  "ident": "MD",
+  "has": true,
+  "aliases": null,
+  "size": 3513,
+  "snippet": "toAutoClassifierInput(e){return e},async description(){return Mzo},async prompt(){return Hzo},create({permissions:e,credentials:r}){return{async checkPermissions(n){if(e().mode===\""
+ }
+]

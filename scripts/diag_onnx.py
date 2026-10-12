@@ -13,7 +13,10 @@ Usage:
   python scripts/diag_onnx.py --adapter models/checkpoints/pilot_t3_8192 --iters 3
 """
 from __future__ import annotations
-import argparse, json, sys, time
+import argparse
+import json
+import sys
+import time
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -69,7 +72,8 @@ def main():
                                                               trust_remote_code=True, dtype=torch.float32)
         from peft import PeftModel
         m = PeftModel.from_pretrained(m, args.adapter).merge_and_unload().eval()
-        t = torch.tensor(ids); tmask = torch.tensor(msk)
+        t = torch.tensor(ids)
+        tmask = torch.tensor(msk)
         with torch.no_grad():
             med, p95 = timeit(lambda: m(input_ids=t, attention_mask=tmask), args.iters, warmup=1)
         res["torch_fp32_merged"] = {"p50_s": round(med, 2), "p95_s": round(p95, 2),
@@ -124,7 +128,8 @@ def main():
     res["onnx_int8_dynamic"] = {"p50_s": round(med8, 3), "p95_s": round(p95_8, 3), "logits": out8.tolist()}
     print(f"  onnx int8: p50 {med8*1000:.0f}ms p95 {p95_8*1000:.0f}ms")
 
-    d32 = np.array(res["onnx_fp32"]["logits"]); d8 = np.array(res["onnx_int8_dynamic"]["logits"])
+    d32 = np.array(res["onnx_fp32"]["logits"])
+    d8 = np.array(res["onnx_int8_dynamic"]["logits"])
     res["agreement_int8_vs_fp32"] = {
         "argmax_same": bool(d32.argmax() == d8.argmax()),
         "max_abs_logit_delta": round(float(np.abs(d32 - d8).max()), 5),

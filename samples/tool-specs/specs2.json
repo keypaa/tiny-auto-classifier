@@ -1,0 +1,658 @@
+[
+ {
+  "file": "chunk-0z420tav.js",
+  "off": 4392,
+  "name": "ListAgents",
+  "ident": "Wl",
+  "has": true,
+  "aliases": "Rzo"
+ },
+ {
+  "file": "chunk-19rk5k5f.js",
+  "off": 16413,
+  "name": "DesignSync",
+  "ident": "WUt",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-1y6g10ys.js",
+  "off": 4751,
+  "name": "CronCreate",
+  "ident": "xm",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-28888bb3.js",
+  "off": 13097,
+  "name": "propose_skills",
+  "ident": "poe",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-28ad3xcx.js",
+  "off": 4222,
+  "name": "SearchMcpRegistry",
+  "ident": "AOt",
+  "has": false,
+  "aliases": null
+ },
+ {
+  "file": "chunk-2dk1sr5c.js",
+  "off": 80827,
+  "name": "ExitPlanMode",
+  "ident": "hu",
+  "has": false,
+  "aliases": null
+ },
+ {
+  "file": "chunk-2yr4r0q6.js",
+  "off": 6799,
+  "name": "SendUserFile",
+  "ident": "cy",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-3pdq8jba.js",
+  "off": 4121,
+  "name": "ObserverReport",
+  "ident": "ie",
+  "has": false,
+  "aliases": null
+ },
+ {
+  "file": "chunk-4dmvmy6f.js",
+  "off": 1358,
+  "name": "mcp",
+  "ident": "\"mcp\"",
+  "has": false,
+  "aliases": null
+ },
+ {
+  "file": "chunk-53rck7h6.js",
+  "off": 5258,
+  "name": "FetchInboxMessage",
+  "ident": "C3e",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-5xsw7sqy.js",
+  "off": 5199,
+  "name": "ProposeGoal",
+  "ident": "ryn",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-7fqews8m.js",
+  "off": 4141,
+  "name": "CronDelete",
+  "ident": "UE",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-7h1t1krk.js",
+  "off": 13966,
+  "name": "Projects",
+  "ident": "H",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-7tjrd5mt.js",
+  "off": 4215,
+  "name": "self_hosted_runner_get_pool",
+  "ident": "_Ar",
+  "has": false,
+  "aliases": null
+ },
+ {
+  "file": "chunk-7tjrd5mt.js",
+  "off": 5199,
+  "name": "self_hosted_runner_list_sessions",
+  "ident": "SAr",
+  "has": false,
+  "aliases": null
+ },
+ {
+  "file": "chunk-7tjrd5mt.js",
+  "off": 6180,
+  "name": "self_hosted_runner_list_runners",
+  "ident": "bAr",
+  "has": false,
+  "aliases": null
+ },
+ {
+  "file": "chunk-7tjrd5mt.js",
+  "off": 7093,
+  "name": "self_hosted_runner_list_secrets",
+  "ident": "wAr",
+  "has": false,
+  "aliases": null
+ },
+ {
+  "file": "chunk-7tjrd5mt.js",
+  "off": 8088,
+  "name": "self_hosted_runner_read_health",
+  "ident": "EAr",
+  "has": false,
+  "aliases": null
+ },
+ {
+  "file": "chunk-7tjrd5mt.js",
+  "off": 9507,
+  "name": "self_hosted_runner_read_metrics",
+  "ident": "kAr",
+  "has": false,
+  "aliases": null
+ },
+ {
+  "file": "chunk-7tjrd5mt.js",
+  "off": 10620,
+  "name": "self_hosted_runner_requeue_session",
+  "ident": "AAr",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-7tjrd5mt.js",
+  "off": 13015,
+  "name": "self_hosted_runner_spawn_local",
+  "ident": "vAr",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-7tjrd5mt.js",
+  "off": 15121,
+  "name": "self_hosted_runner_tail_log",
+  "ident": "TAr",
+  "has": false,
+  "aliases": null
+ },
+ {
+  "file": "chunk-845w7yx9.js",
+  "off": 41473,
+  "name": "Agent",
+  "ident": "ht",
+  "has": true,
+  "aliases": "Om"
+ },
+ {
+  "file": "chunk-8mw8jnhw.js",
+  "off": 17804,
+  "name": "SendFile",
+  "ident": "l7",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-9yv1y1tb.js",
+  "off": 2781,
+  "name": "SubagentHandback",
+  "ident": "Vw",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-ad1k2ank.js",
+  "off": 4464,
+  "name": "ListConnectors",
+  "ident": "SOt",
+  "has": false,
+  "aliases": null
+ },
+ {
+  "file": "chunk-ays13mbr.js",
+  "off": 4199,
+  "name": "CronList",
+  "ident": "Kxe",
+  "has": false,
+  "aliases": null
+ },
+ {
+  "file": "chunk-b0k7e9wk.js",
+  "off": 92423,
+  "name": "PowerShell",
+  "ident": "St",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 25071,
+  "name": "ReadNotifications",
+  "ident": "i$",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 27050,
+  "name": "ShareOnboardingGuide",
+  "ident": "dSe",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 30676,
+  "name": "ShowOnboardingRolePicker",
+  "ident": "ope",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 32037,
+  "name": "TaskStop",
+  "ident": "Ic",
+  "has": true,
+  "aliases": "\"KillShell\",\"KillBash\""
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 36023,
+  "name": "SendUserMessage",
+  "ident": "tf",
+  "has": true,
+  "aliases": "Mqt"
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 40127,
+  "name": "ScheduleWakeup",
+  "ident": "El",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 53444,
+  "name": "ReportFindings",
+  "ident": "ZP",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 64289,
+  "name": "TodoWrite",
+  "ident": "TC",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 65203,
+  "name": "TestingPermission",
+  "ident": "go",
+  "has": false,
+  "aliases": null
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 66977,
+  "name": "memory_list",
+  "ident": "__",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 76999,
+  "name": "SendFeedback",
+  "ident": "Co",
+  "has": false,
+  "aliases": null
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 83905,
+  "name": "GetTask",
+  "ident": "Zm",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 98449,
+  "name": "LSP",
+  "ident": "OD",
+  "has": false,
+  "aliases": null
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 107371,
+  "name": "RefreshMcpTools",
+  "ident": "JU",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 114197,
+  "name": "EnterWorktree",
+  "ident": "DO",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 124063,
+  "name": "ExitWorktree",
+  "ident": "qxe",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 131709,
+  "name": "TaskCreate",
+  "ident": "Wv",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 133916,
+  "name": "TaskGet",
+  "ident": "r8",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 138227,
+  "name": "TaskUpdate",
+  "ident": "Qk",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-b2sa2xdg.js",
+  "off": 143155,
+  "name": "TaskList",
+  "ident": "tA",
+  "has": false,
+  "aliases": null
+ },
+ {
+  "file": "chunk-be990px5.js",
+  "off": 4446,
+  "name": "PushNotification",
+  "ident": "AC",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-bv723k46.js",
+  "off": 20578,
+  "name": "ClaudeDesign",
+  "ident": "JG",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-d42xkz0f.js",
+  "off": 11794,
+  "name": null,
+  "ident": "e",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-hkn13sjq.js",
+  "off": 57961,
+  "name": "Workflow",
+  "ident": "Bd",
+  "has": true,
+  "aliases": "\"RunWorkflow\""
+ },
+ {
+  "file": "chunk-j3hkytsv.js",
+  "off": 12694,
+  "name": "AskUserQuestion",
+  "ident": "Vs",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-jf3ywpc3.js",
+  "off": 10012,
+  "name": null,
+  "ident": "e",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-jwv1avdp.js",
+  "off": 44609,
+  "name": "SendMessage",
+  "ident": "no",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-phc04ptg.js",
+  "off": 48769,
+  "name": "memory_write",
+  "ident": "Oc",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-q7d71vwn.js",
+  "off": 9669,
+  "name": "EndConversation",
+  "ident": "xC",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-qec902z2.js",
+  "off": 6508,
+  "name": "EnterPlanMode",
+  "ident": "wx",
+  "has": false,
+  "aliases": null
+ },
+ {
+  "file": "chunk-qec902z2.js",
+  "off": 20278,
+  "name": "Skill",
+  "ident": "ko",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-sa3mgv8b.js",
+  "off": 10066,
+  "name": "Poll",
+  "ident": "eg",
+  "has": false,
+  "aliases": null
+ },
+ {
+  "file": "chunk-t5fdy639.js",
+  "off": 23256,
+  "name": "StructuredOutput",
+  "ident": "ji",
+  "has": false,
+  "aliases": null
+ },
+ {
+  "file": "chunk-tvd88b8g.js",
+  "off": 8667,
+  "name": null,
+  "ident": "e",
+  "has": false,
+  "aliases": null
+ },
+ {
+  "file": "chunk-tvd88b8g.js",
+  "off": 15124,
+  "name": "SuggestPluginInstall",
+  "ident": "Zxe",
+  "has": false,
+  "aliases": null
+ },
+ {
+  "file": "chunk-tvd88b8g.js",
+  "off": 17094,
+  "name": "SuggestSkills",
+  "ident": "w1t",
+  "has": false,
+  "aliases": null
+ },
+ {
+  "file": "chunk-tvd88b8g.js",
+  "off": 19297,
+  "name": null,
+  "ident": "e",
+  "has": false,
+  "aliases": null
+ },
+ {
+  "file": "chunk-v15exdkc.js",
+  "off": 35620,
+  "name": "AppifactRepl",
+  "ident": "gJe",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-wgfrtm7w.js",
+  "off": 747955,
+  "name": "Write",
+  "ident": "dn",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-wgfrtm7w.js",
+  "off": 931542,
+  "name": "Read",
+  "ident": "ut",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-wgfrtm7w.js",
+  "off": 959437,
+  "name": "Glob",
+  "ident": "co",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-wgfrtm7w.js",
+  "off": 964690,
+  "name": "Grep",
+  "ident": "Zr",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-wgfrtm7w.js",
+  "off": 976084,
+  "name": "memory_read",
+  "ident": "Kf",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-wgfrtm7w.js",
+  "off": 1129099,
+  "name": "ToolSearch",
+  "ident": "rl",
+  "has": false,
+  "aliases": null
+ },
+ {
+  "file": "chunk-wgfrtm7w.js",
+  "off": 1395339,
+  "name": "WebFetch",
+  "ident": "_r",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-wgfrtm7w.js",
+  "off": 1970524,
+  "name": "WaitForMcpServers",
+  "ident": "eI",
+  "has": false,
+  "aliases": null
+ },
+ {
+  "file": "chunk-wgfrtm7w.js",
+  "off": 3916928,
+  "name": "Edit",
+  "ident": "Et",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-wgfrtm7w.js",
+  "off": 3931636,
+  "name": "NotebookEdit",
+  "ident": "Ka",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-wgfrtm7w.js",
+  "off": 4080965,
+  "name": "Bash",
+  "ident": "Ue",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-x7amc0ky.js",
+  "off": 4207,
+  "name": "SuggestConnectors",
+  "ident": "COt",
+  "has": false,
+  "aliases": null
+ },
+ {
+  "file": "chunk-yn7he971.js",
+  "off": 14656,
+  "name": "RemoteTrigger",
+  "ident": "MD",
+  "has": true,
+  "aliases": null
+ },
+ {
+  "file": "chunk-z576tem3.js",
+  "off": 1658,
+  "name": "ListMcpResourcesTool",
+  "ident": "ZG",
+  "has": true,
+  "aliases": "\"ListMcpResources\""
+ },
+ {
+  "file": "chunk-z576tem3.js",
+  "off": 3992,
+  "name": "ReadMcpResourceDirTool",
+  "ident": "dj",
+  "has": true,
+  "aliases": "\"ReadMcpResourceDir\""
+ },
+ {
+  "file": "chunk-z576tem3.js",
+  "off": 6616,
+  "name": "ReadMcpResourceTool",
+  "ident": "IN",
+  "has": true,
+  "aliases": "\"ReadMcpResource\""
+ }
+]

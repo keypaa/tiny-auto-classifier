@@ -1,0 +1,15 @@
+{
+  "model": "ProCreations/auto-0.4b+pilot_t3_8192",
+  "n": 100,
+  "accuracy": 0.86,
+  "balanced_acc": 0.8806,
+  "false_approve": 0.0204,
+  "false_deny": 0.2549,
+  "latency_s": 18.148,
+  "confusion": {
+    "tp_deny": 48,
+    "tn_approve": 38,
+    "fp_waved": 1,
+    "fn_blocked": 13
+  }
+}

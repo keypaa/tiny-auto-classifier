@@ -1,0 +1,68 @@
+
+FILE: chunk-b2sa2xdg.js   OFFSET: 134255
+--- PRECEDING CONTEXT (6000 chars) ---
+mit":"commits"}`);if(E>0)x.push(`${E} uncommitted ${E===1?"file":"files"}`);let G=x.length>0?` Discarded ${x.join(" and ")}.`:"",U=O?` Commits made there remain stored server-side (head changeset ${O.slice(0,12)}).`:"";return{data:{action:"remove",originalCwd:s,worktreePath:g,worktreeBranch:h,discardedFiles:E,discardedCommits:H,restoredCwd:K.restoredCwd,originalCwdMissing:K.originalCwdMissing,message:`Exited and removed worktree at ${g}.${G}${U} ${yt(s,K)}`}}}}},mapToolResultToToolResultBlockParam({message:e},r){return{type:"tool_result",content:e,tool_use_id:r}}});var ur="Create a new task in the task list";function mr(){let e=Lo()?" and potentially assigned to teammates":"",r=Lo()?"- Include enough detail in the description for another agent to understand and complete the task\n- New tasks are created with status 'pending' and no owner - use TaskUpdate with the `owner` parameter to assign them\n":"";return`Use this tool to create a structured task list for your current coding session. This helps you track progress, organize complex tasks, and demonstrate thoroughness to the user.
+It also helps the user understand the progress of the task and overall progress of their requests.
+
+## When to Use This Tool
+
+Use this tool proactively in these scenarios:
+
+- Complex multi-step tasks - When a task requires 3 or more distinct steps or actions
+- Non-trivial and complex tasks - Tasks that require careful planning or multiple operations${e}
+- Plan mode - When using plan mode, create a task list to track the work
+- User explicitly requests todo list - When the user directly asks you to use the todo list
+- User provides multiple tasks - When users provide a list of things to be done (numbered or comma-separated)
+- After receiving new instructions - Immediately capture user requirements as tasks
+- When you start working on a task - Mark it as in_progress BEFORE beginning work
+- After completing a task - Mark it as completed and add any new follow-up tasks discovered during implementation
+
+## When NOT to Use This Tool
+
+Skip using this tool when:
+- There is only a single, straightforward task
+- The task is trivial and tracking it provides no organizational benefit
+- The task can be completed in less than 3 trivial steps
+- The task is purely conversational or informational
+
+NOTE that you should not use this tool if there is only one trivial task to do. In this case you are better off just doing the task directly.
+
+## Task Fields
+
+- **subject**: A brief, actionable title in imperative form (e.g., "Fix authentication bug in login flow")
+- **description**: What needs to be done
+- **activeForm** (optional): Present continuous form shown in the spinner when the task is in_progress (e.g., "Fixing authentication bug"). If omitted, the spinner shows the subject instead.
+
+All tasks are created with status \`pending\`.
+
+## Tips
+
+- Create tasks with clear, specific subjects that describe the outcome
+- After creating tasks, use TaskUpdate to set up dependencies (blocks/blockedBy) if needed
+${r}- Check TaskList first to avoid creating duplicate tasks
+`}var $s=f(()=>Ge({subject:o().describe("A brief title for the task"),description:o().describe("What needs to be done"),activeForm:o().optional().describe('Present continuous form shown in spinner when in_progress (e.g., "Running tests")'),metadata:ue(o(),ie()).optional().describe("Arbitrary metadata to attach to the task")})),Bs=f(()=>u({task:u({id:o(),subject:o()})})),pr=Gt({name:Wv,searchHint:"create a task in the task list",backgrounding:"never",maxResultSizeChars:1e5,async description(){return ur},async prompt(){return mr()},get inputSchema(){return $s()},get outputSchema(){return Bs()},userFacingName(){return"TaskCreate"},shouldDefer:!0,coerceInput:mpt,validationErrorSteer:K0o,isEnabled(){return a7()},isConcurrencySafe(){return!1},toAutoClassifierInput(e){return e.subject},renderToolUseMessage(){return null},create(e){return{async call({subject:r,description:n,activeForm:s,metadata:p},{signal:g,onProgress:h}){let T=await GWo(jv(),{subject:r,description:n,activeForm:s,status:"pending",owner:void 0,blocks:[],blockedBy:[],metadata:p},e.storageV5),S=[],w=e.runTaskHooks(_Kn,T,r,n,oh(),Da(),void 0,g);try{for await(let v of w)if(v.blockingError)S.push($0r(v.blockingError))}catch(v){if(!(v instanceof Il))throw v;t("TaskCreated hooks cancelled (control stream closed)")}if(S.length>0)throw await wgt(jv(),T,e.storageV5),Error(S.join(`
+`));return h?.({type:"set_expanded_view",expandedView:"tasks"}),{data:{task:{id:T,subject:r}}}}}},mapToolResultToToolResultBlockParam(e,r){let{task:n}=e;return{tool_use_id:r,type:"tool_result",content:`Task #${n.id} created successfully: ${n.subject}`}}});var hr="Get a task by ID from the task list",gr=`Use this tool to retrieve a task by its ID from the task list.
+
+## When to Use This Tool
+
+- When you need the full description and context before starting work on a task
+- To understand task dependencies (what it blocks, what blocks it)
+- After being assigned a task, to get complete requirements
+
+## Output
+
+Returns full task details:
+- **subject**: Task title
+- **description**: Detailed requirements and context
+- **status**: 'pending', 'in_progress', or 'completed'
+- **blocks**: Tasks waiting on this one to complete
+- **blockedBy**: Tasks that must complete before this one can start
+
+## Tips
+
+- After fetching a task, verify its blockedBy list is empty before beginning work.
+- Use TaskList to see all tasks in summary form.
+`;var js=f(()=>Ge({taskId:o().describe("The ID of the task to retrieve")})),Ws=f(()=>u({task:u({id:o(),subject:o(),description:o(),status:Lxe(),blocks:C(o()),blockedBy:C(o())}).nullable()})),yr=Gt({name:r8,searchHint:"retrieve a task by ID",backgrounding:"never",maxResultSizeChars:1e5,async description(){return hr},async prompt(){return gr},get inputSchema(){return js()},get outputSchema(){return Ws()},userFacingName(){return"TaskGet"},shouldDefer:!0,isEnabled(){return a7()},isConcurrencySafe(){return!0},isReadOnly(){return!0},
+--- METHOD ---
+toAutoClassifierInput(e){return e.taskId}
+

@@ -70,14 +70,28 @@ class PromptBuilder:
     manifests/original/policy.sha256 (or passed expected_hash).
     """
 
-    # Default template: policy is verbatim, then dynamic section.
-    # The real production template must be injected to match the exact
-    # Claude Code Auto Mode classifier input format when available.
+    # Default template reproduces the Claude Code 2.1.289 wire format.
+    #
+    # The envelope is built by KXo() in the shipped bundle and is:
+    #
+    #     <transcript>\n{blocks}\n</transcript>\n{suffix}\n{action}
+    #
+    # The action follows the closing tag, not inside it. Evidence and action are
+    # therefore separated by a delimiter the user cannot forge: NT()/nI() bracket
+    # a user-supplied literal "<transcript>" into "[transcript>" on output. See
+    # analysis/Q8-classifierMetaLines.md.
+    #
+    # `metadata` is not part of the 2.1.289 envelope. It is retained as an
+    # optional trailing context block so callers can pass host facts without
+    # breaking the format; it is ignored when empty.
     DEFAULT_DYNAMIC_TEMPLATE = (
-        "\n\n---TRANSCRIPT---\n{transcript}\n"
-        "\n---METADATA---\n{metadata}\n"
-        "\n---LATEST_ACTION---\n{latest_action}\n"
+        "<transcript>\n{transcript}</transcript>\n"
+        "{metadata}{latest_action}"
     )
+
+    # When metadata is present it must be its own block before the action, so the
+    # suffix template needs a newline separator that only fires in that case.
+    METADATA_TEMPLATE = "\n{metadata}\n"
 
     def __init__(
         self,
@@ -127,9 +141,21 @@ class PromptBuilder:
         if verify:
             self.verify_policy()
 
-        dynamic_section = self.dynamic_template.format(
-            transcript=transcript, metadata=metadata, latest_action=latest_action
-        )
+        # metadata is optional in the 2.1.289 envelope; drop it entirely when
+        # empty so the prompt matches the shipped bytes rather than carrying a
+        # blank line the real system would not send.
+        if metadata.strip():
+            dynamic_section = self.dynamic_template.format(
+                transcript=transcript,
+                metadata=self.METADATA_TEMPLATE.format(metadata=metadata.strip()),
+                latest_action=latest_action,
+            )
+        else:
+            # No metadata: the shipped envelope has nothing between the closing
+            # tag and the action.
+            dynamic_section = self.dynamic_template.format(
+                transcript=transcript, metadata="", latest_action=latest_action
+            )
         prompt = self.policy_text + dynamic_section
         prompt_hash = sha256_hex(prompt)
         characters = len(prompt)

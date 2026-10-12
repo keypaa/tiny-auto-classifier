@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Build exact classifier input from policy + dynamic fields; emit manifest."""
 from pathlib import Path
-import sys, json, argparse
+import sys
+import json
+import argparse
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src.prompt.builder import PromptBuilder
 

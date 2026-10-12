@@ -1,0 +1,46 @@
+
+FILE: chunk-b2sa2xdg.js   OFFSET: 132080
+--- PRECEDING CONTEXT (6000 chars) ---
+ion. Re-invoke with discard_changes: true to proceed \u2014 or use action: "keep" to preserve the worktree.`,errorCode:3};let{changedFiles:p,commits:g,submoduleWork:h,movedToChangeset:T}=s;if(p>0||g>0){let S=[];if(p>0)S.push(`${p} uncommitted ${p===1?"file":"files"}${h?` (including ${oQ(h)}, which git status in the worktree does not show)`:""}`);if(g>0)S.push(`${g} ${g===1?"commit":"commits"} on ${n.worktreeBranch??"the worktree branch"}`);return{result:!1,message:`Worktree has ${S.join(" and ")}. Removing will discard this work permanently.${T?` (Commits made in this worktree are already stored server-side, head changeset ${T.slice(0,12)}, and are not affected by removing it.)`:""} Confirm with the user, then re-invoke with discard_changes: true \u2014 or use action: "keep" to preserve the worktree.`,errorCode:2}}}return{result:!0}},async call(r){let n=Ec();if(!n)throw Error("Not in a worktree session");let{originalCwd:s,preEnterOriginalCwd:p,worktreePath:g,worktreeBranch:h,tmuxSessionName:T,liveLaunchAnchor:S}=n,w=dr()===ve(),v=r.action==="keep"&&!1,{changedFiles:E,commits:H,movedToChangeset:O}=(v?null:await ar(g,n))??{changedFiles:0,commits:0};if(r.action==="keep"){await A_e(e.storageV5);let D=await lr(e.session,s,p,w,g,S,e.storageV5);i("tengu_worktree_kept",{mid_session:!0,commits:H,changed_files:E});let V=T?` Tmux session ${T} is still running; reattach with: tmux attach -t ${T}`:"";return{data:{action:"keep",originalCwd:s,worktreePath:g,worktreeBranch:h,tmuxSessionName:T,restoredCwd:D.restoredCwd,originalCwdMissing:D.originalCwdMissing,message:`Exited worktree. Your work is preserved at ${g}${h?` on branch ${h}`:""}. ${yt(s,D)}${V}`}}}if(T)await nre(T);let B=await KCe(e.storageV5,e.credentials),K=await lr(e.session,s,p,w,g,S,e.storageV5);if(!B)return{data:{action:"remove",originalCwd:s,worktreePath:g,worktreeBranch:h,discardedFiles:0,discardedCommits:0,restoredCwd:K.restoredCwd,originalCwdMissing:K.originalCwdMissing,message:`Exited worktree but could not remove it \u2014 kept at ${g}. ${yt(s,K)}`}};i("tengu_worktree_removed",{source:_("exit_tool"),mid_session:!0,commits:H,changed_files:E});let x=[];if(H>0)x.push(`${H} ${H===1?"commit":"commits"}`);if(E>0)x.push(`${E} uncommitted ${E===1?"file":"files"}`);let G=x.length>0?` Discarded ${x.join(" and ")}.`:"",U=O?` Commits made there remain stored server-side (head changeset ${O.slice(0,12)}).`:"";return{data:{action:"remove",originalCwd:s,worktreePath:g,worktreeBranch:h,discardedFiles:E,discardedCommits:H,restoredCwd:K.restoredCwd,originalCwdMissing:K.originalCwdMissing,message:`Exited and removed worktree at ${g}.${G}${U} ${yt(s,K)}`}}}}},mapToolResultToToolResultBlockParam({message:e},r){return{type:"tool_result",content:e,tool_use_id:r}}});var ur="Create a new task in the task list";function mr(){let e=Lo()?" and potentially assigned to teammates":"",r=Lo()?"- Include enough detail in the description for another agent to understand and complete the task\n- New tasks are created with status 'pending' and no owner - use TaskUpdate with the `owner` parameter to assign them\n":"";return`Use this tool to create a structured task list for your current coding session. This helps you track progress, organize complex tasks, and demonstrate thoroughness to the user.
+It also helps the user understand the progress of the task and overall progress of their requests.
+
+## When to Use This Tool
+
+Use this tool proactively in these scenarios:
+
+- Complex multi-step tasks - When a task requires 3 or more distinct steps or actions
+- Non-trivial and complex tasks - Tasks that require careful planning or multiple operations${e}
+- Plan mode - When using plan mode, create a task list to track the work
+- User explicitly requests todo list - When the user directly asks you to use the todo list
+- User provides multiple tasks - When users provide a list of things to be done (numbered or comma-separated)
+- After receiving new instructions - Immediately capture user requirements as tasks
+- When you start working on a task - Mark it as in_progress BEFORE beginning work
+- After completing a task - Mark it as completed and add any new follow-up tasks discovered during implementation
+
+## When NOT to Use This Tool
+
+Skip using this tool when:
+- There is only a single, straightforward task
+- The task is trivial and tracking it provides no organizational benefit
+- The task can be completed in less than 3 trivial steps
+- The task is purely conversational or informational
+
+NOTE that you should not use this tool if there is only one trivial task to do. In this case you are better off just doing the task directly.
+
+## Task Fields
+
+- **subject**: A brief, actionable title in imperative form (e.g., "Fix authentication bug in login flow")
+- **description**: What needs to be done
+- **activeForm** (optional): Present continuous form shown in the spinner when the task is in_progress (e.g., "Fixing authentication bug"). If omitted, the spinner shows the subject instead.
+
+All tasks are created with status \`pending\`.
+
+## Tips
+
+- Create tasks with clear, specific subjects that describe the outcome
+- After creating tasks, use TaskUpdate to set up dependencies (blocks/blockedBy) if needed
+${r}- Check TaskList first to avoid creating duplicate tasks
+`}var $s=f(()=>Ge({subject:o().describe("A brief title for the task"),description:o().describe("What needs to be done"),activeForm:o().optional().describe('Present continuous form shown in spinner when in_progress (e.g., "Running tests")'),metadata:ue(o(),ie()).optional().describe("Arbitrary metadata to attach to the task")})),Bs=f(()=>u({task:u({id:o(),subject:o()})})),pr=Gt({name:Wv,searchHint:"create a task in the task list",backgrounding:"never",maxResultSizeChars:1e5,async description(){return ur},async prompt(){return mr()},get inputSchema(){return $s()},get outputSchema(){return Bs()},userFacingName(){return"TaskCreate"},shouldDefer:!0,coerceInput:mpt,validationErrorSteer:K0o,isEnabled(){return a7()},isConcurrencySafe(){return!1},
+--- METHOD ---
+toAutoClassifierInput(e){return e.subject}
+

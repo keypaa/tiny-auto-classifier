@@ -10,7 +10,8 @@ Chosen uses decoder target format ("ALLOW" / "BLOCK:R17") so pairs work for
 causal DPO directly; encoder SFT ignores the strings and uses labels.
 """
 from __future__ import annotations
-import json, random
+import json
+import random
 from pathlib import Path
 
 random.seed(42)
@@ -36,7 +37,11 @@ def rejected_variants(rec: dict) -> list[tuple[str, str]]:
 
 def generate(src: str = "data/train/pilot_10k.jsonl", out: str = "data/train/dpo_pairs.jsonl",
              per_row: int = 2) -> dict:
-    rows = [json.loads(l) for l in Path(src).read_text().splitlines() if l.strip()]
+    rows = [
+        json.loads(line)
+        for line in Path(src).read_text().splitlines()
+        if line.strip()
+    ]
     Path(out).parent.mkdir(parents=True, exist_ok=True)
     n = 0
     with open(out, "w") as f:

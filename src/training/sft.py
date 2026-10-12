@@ -156,10 +156,15 @@ def build_trainer(cfg: TrainingConfig) -> Trainer:
     # collator
     if cfg.mode == "encoder":
         pad_id = tok.pad_token_id if tok.pad_token_id is not None else 50283
-        collator = lambda batch: collate_encoder(batch, pad_token_id=pad_id)
+
+        def collator(batch):
+            return collate_encoder(batch, pad_token_id=pad_id)
+
     else:
         pad_id = tok.pad_token_id
-        collator = lambda batch: collate_decoder(batch, pad_token_id=pad_id)
+
+        def collator(batch):
+            return collate_decoder(batch, pad_token_id=pad_id)
 
     # precision + optimizer
     prec = _pick_precision(cfg)
@@ -266,10 +271,11 @@ def build_trainer(cfg: TrainingConfig) -> Trainer:
         try:
             # disable scaler unscale for this trainer
             if hasattr(trainer.accelerator, "scaler") and trainer.accelerator.scaler is not None:
-                # monkey-patch unscale to no-op and clip to direct torch
-                orig_unscale = trainer.accelerator.unscale_gradients
+                # monkey-patch unscale to no-op and clip to direct torch.
+                # The patch is deliberately not reverted: it must hold for the
+                # whole run, so the originals are not retained.
                 trainer.accelerator.unscale_gradients = lambda: None
-                orig_clip = trainer.accelerator.clip_grad_norm_
+
                 def _patched_clip(parameters, max_norm):
                     # use raw torch clip without unscale
                     return torch.nn.utils.clip_grad_norm_(parameters, max_norm)
@@ -291,7 +297,9 @@ def train(cfg_path: str | Path) -> str:
     # save
     trainer.save_model(cfg.output_dir)
     # also save tokenizer + config snapshot + metrics (compat 4.x/5.x)
-    _tok = getattr(trainer, "tokenizer", None) or getattr(trainer, "processing_class", None) or tok
+    # `tok` is local to build_trainer(); referencing it here was a NameError
+    # waiting on any transformers version that exposes neither attribute.
+    _tok = getattr(trainer, "tokenizer", None) or getattr(trainer, "processing_class", None)
     if _tok:
         try:
             _tok.save_pretrained(cfg.output_dir)

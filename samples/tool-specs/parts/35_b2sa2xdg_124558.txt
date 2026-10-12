@@ -1,0 +1,37 @@
+
+FILE: chunk-b2sa2xdg.js   OFFSET: 124558
+--- PRECEDING CONTEXT (6000 chars) ---
+th this name already existed and was resumed as-is \u2014 it may carry an earlier session\u2019s commits. Pass a different name if you wanted a fresh worktree.":"";return{data:{worktreePath:n.worktreePath,worktreeBranch:n.worktreeBranch,message:`${p} worktree at ${n.worktreePath}${s}.${g} The session is now working in the worktree. Use ExitWorktree to leave mid-session, or exit the session to be prompted.`}}}}},mapToolResultToToolResultBlockParam({message:e},r){return{type:"tool_result",content:e,tool_use_id:r}}});import{realpath as Ds}from"fs/promises";import{homedir as Ls}from"os";function ir(){return`Exit a worktree session created by EnterWorktree and return the session to the original working directory.
+
+## Scope
+
+This tool ONLY operates on worktrees created by EnterWorktree in this session. It will NOT touch:
+- Worktrees you created manually with \`git worktree add\`
+- Worktrees from a previous session (even if created by EnterWorktree then)
+- The directory you're in if EnterWorktree was never called
+
+If called outside an EnterWorktree session, the tool is a **no-op**: it reports that no worktree session is active and takes no action. Filesystem state is unchanged.
+
+## When to Use
+
+- The user explicitly asks to "exit the worktree", "leave the worktree", "go back", or otherwise end the worktree session
+- Do NOT call this proactively \u2014 only when the user asks
+
+## Parameters
+
+- \`action\` (required): \`"keep"\` or \`"remove"\`
+  - \`"keep"\` \u2014 leave the worktree directory and branch intact on disk. Use this if the user wants to come back to the work later, or if there are changes to preserve.
+  - \`"remove"\` \u2014 delete the worktree directory and its branch. Use this for a clean exit when the work is done or abandoned.
+- \`discard_changes\` (optional, default false): only meaningful with \`action: "remove"\`. If the worktree has uncommitted files or commits not on the original branch, the tool will REFUSE to remove it unless this is set to \`true\`. If the tool returns an error listing changes, confirm with the user before re-invoking with \`discard_changes: true\`.
+
+## Behavior
+
+- Restores the session's working directory to where it was before EnterWorktree
+- Clears CWD-dependent caches (system prompt sections, memory files, plans directory) so the session state reflects the original directory
+- If a tmux session was attached to the worktree: killed on \`remove\`, left running on \`keep\` (its name is returned so the user can reattach)
+- Once exited, EnterWorktree can be called again to create a fresh worktree
+`}var Ms=f(()=>Ge({action:j(["keep","remove"]).describe('"keep" leaves the worktree and branch on disk; "remove" deletes both.'),discard_changes:M().optional().describe('Required true when action is "remove" and the worktree has uncommitted files or unmerged commits. The tool will refuse and list them otherwise.')})),Ns=f(()=>u({action:j(["keep","remove"]),originalCwd:o(),worktreePath:o(),worktreeBranch:o().optional(),tmuxSessionName:o().optional(),discardedFiles:k().optional(),discardedCommits:k().optional(),restoredCwd:o().optional().describe("@internal Where the session's cwd ended up: originalCwd, or a fallback when it was gone."),originalCwdMissing:M().optional().describe("@internal originalCwd was gone (or a network path the session will not touch), so restoredCwd is a fallback directory."),message:o()}));async function ar(e,r){let{originalHeadCommit:n}=r,s=await C4(e);if(!s.ok)return null;let p=await Xe(At(),[...s.args,...bn,"-C",e,...b6],{env:vl(e)});if(p.code!==0)return null;let g=Fue(await A4(e)),h=W(p.stdout.split(`
+`),(w)=>w.trim()!=="")+(g===void 0?0:g.kind==="changes"?g.paths.length:1);if(!n)return null;let T=await Xe(At(),[...bn,"-C",e,"rev-list","--count",`${n}..HEAD`],{env:vl(e)});if(T.code!==0)return null;let S=parseInt(T.stdout.trim(),10)||0;return{changedFiles:h,commits:S,...g!==void 0&&{submoduleWork:g}}}async function lr(e,r,n,s,p,g,h){let T=r,S=!1,w=HF(r);try{if(w)throw Error("network-spelled original cwd (screened, never touched)");Nf(r,e)}catch(O){let B=w;if(!B)try{await Ds(r)}catch(K){B=z(K)}if(!B)throw O;S=!0,T="";for(let K of[p,Ls(),Xb()])try{Nf(K,e),T=K;break}catch{}if(!T)throw O;t(`ExitWorktree: original directory "${r}" no longer exists; session cwd recovered to "${T}"`)}let v=S&&T===p,E=S?T:n??T,H=g!==void 0&&!zTe(E,eNe(g,p),{requireCovered:!0,coveredWitnesses:j4e(g,p),extraCoveredRoots:(()=>{let O=E1(p);return O!==null?[O]:[]})()});if(H)t(`ExitWorktree: not moving the permission anchor to "${E}" \u2014 it strictly contains the session's live launch anchor (a record-derived widening); the anchor stays put`);if((!S||v)&&!H){DA(E);try{await fYe(h)}catch(B){ydn(B,"ExitWorktree")}try{await OUt(E,h)}catch(B){t(`ExitWorktree: bg session state rehome failed (continuing): ${B}`,{level:"error"})}let O=!S&&n!==void 0&&g===void 0;if(s){if(!O&&Wje(E))t(`ExitWorktree: not installing projectRoot "${Zs(Tl(E))}" \u2014 untrusted display characters; keeping the existing anchor`);else Xme(E);if(F()&&h!==void 0)await w_t(h);else R$()}}return SO(null,F()?h:void 0),RK("worktree"),UT(e),Ql.cache.clear?.(),ib(h),z9(),Ml()?.refreshGitBranch?.(),{restoredCwd:T,originalCwdMissing:S,fellBackToWorktree:v}}function yt(e,r){if(!r.originalCwdMissing)return`Session is now back in ${e}.`;let n=`The original directory ${e} no longer exists, so the session is now in ${r.restoredCwd}.`;return r.fellBackToWorktree?n:`${n} Consider restarting Claude from an existing directory.`}var cr=Gt({name:qxe,searchHint:"exit a worktree session and return to the original directory",backgrounding:"never",maxResultSizeChars:1e5,async description(){return"Exits a worktree session created by EnterWorktree and restores the original working directory"},async prompt(){return ir()},get inputSchema(){return Ms()},get outputSchema(){return Ns()},userFacingName(e){return e?.action==="remove"?"Cleaning up worktree":"Exiting worktree"},shouldDefer:!0,isDestructive(e){return e.action==="remove"},
+--- METHOD ---
+toAutoClassifierInput(e){return e.action}
+

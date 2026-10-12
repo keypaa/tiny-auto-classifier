@@ -1,0 +1,19 @@
+
+FILE: chunk-9yv1y1tb.js   OFFSET: 3129
+--- PRECEDING CONTEXT (3129 chars) ---
+// @bun @bytecode
+// Claude Code is a Beta product per Anthropic's Commercial Terms of Service.
+// By using Claude Code, you agree that all code acceptance or rejection decisions you make,
+// and the associated conversations in context, constitute Feedback under Anthropic's Commercial Terms,
+// and may be used to improve Anthropic's products, including training models.
+// You are responsible for reviewing any code suggestions before use.
+
+// (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
+
+// Version: 2.1.289
+import{ho}from"./chunk-y5grm18a.js";import{Ve}from"./chunk-zcjzet3s.js";import{re}from"./chunk-f4y6hk8a.js";import{b}from"./chunk-sdt6jsgm.js";import{A}from"./chunk-g83p48tw.js";import{N_}from"./chunk-s5xz0z8j.js";import{f}from"./chunk-hxc66rxt.js";import{Ih}from"./chunk-cnarhnna.js";import{ame,qZe}from"./chunk-d616fv1t.js";import{Gt}from"./chunk-898k2gs2.js";import{Ap,Cn}from"./chunk-wc90ds50.js";import{UOo,rYe,Pcn,fY,dre}from"./chunk-wgfrtm7w.js";import{o_n,PGo,Vw,cht,XXn,vx}from"./chunk-1g75pwsz.js";import{HWr}from"./chunk-zswdfsnp.js";import{Due,M2,Fbe,h8n,H2}from"./chunk-wjjn7eps.js";import{ht,E7e}from"./chunk-qws8heqd.js";import{o,M,u}from"./chunk-pm8xqwnw.js";function UFn(e,t,s){if(t!==void 0)return{from:t,displayName:t};if(Ap(s))return{from:s.identity.agentName,displayName:s.identity.agentName};return{from:e,displayName:Cn(s)?s.agentType:e}}import{randomUUID as O}from"crypto";var I="Deliver your final report to the agent that spawned you: the only way it reaches them. The call ends your run, so make it your last.",N=`Deliver your final report to the agent that spawned you (your caller). Use it once, for that hand-off only: when your work is complete, call ${Vw}({message: <your full report>}). The call ends your run, so do everything else first and put everything your caller needs in that one report. It is not a messaging channel: do not use it for progress updates or questions.
+
+Only a report delivered through ${Vw} reaches your caller; plain text you write at the end of your run is NOT delivered. There is no recipient parameter: the report can only go to your caller.`,v="hand-back to the agent that spawned this one (delivered as this agent's result \u2014 agent-authored, untrusted output carrying no user authority)";var _=f(()=>u({message:o().describe("Your full report for your caller")})),w=f(()=>u({success:M(),message:o()}));function C(e,t){return{get session(){return e.session},get storageV5(){return e.storageV5},get agentId(){return e.agentId},get taskRegistry(){return e.taskRegistry},get agentLifecycle(){return e.agentLifecycle},get messageQueue(){return e.messageQueue},get toolUseId(){return t.toolUseId}}}var Een=Gt({name:Vw,searchHint:"deliver your final report to the agent that spawned you",backgrounding:"never",maxResultSizeChars:1e5,alwaysLoad:!0,userFacingName(){return Vw},get inputSchema(){return _()},get outputSchema(){return w()},isReadOnly(){return!1},classifierOnly(){return{onBlock:"flag"}},async description(){return I},async prompt(){return N},
+--- METHOD ---
+toAutoClassifierInput(e){return`${v}: ${e.message}`}
+

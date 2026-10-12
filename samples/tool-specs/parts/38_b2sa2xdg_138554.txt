@@ -1,0 +1,104 @@
+
+FILE: chunk-b2sa2xdg.js   OFFSET: 138554
+--- PRECEDING CONTEXT (6000 chars) ---
+)throw v;t("TaskCreated hooks cancelled (control stream closed)")}if(S.length>0)throw await wgt(jv(),T,e.storageV5),Error(S.join(`
+`));return h?.({type:"set_expanded_view",expandedView:"tasks"}),{data:{task:{id:T,subject:r}}}}}},mapToolResultToToolResultBlockParam(e,r){let{task:n}=e;return{tool_use_id:r,type:"tool_result",content:`Task #${n.id} created successfully: ${n.subject}`}}});var hr="Get a task by ID from the task list",gr=`Use this tool to retrieve a task by its ID from the task list.
+
+## When to Use This Tool
+
+- When you need the full description and context before starting work on a task
+- To understand task dependencies (what it blocks, what blocks it)
+- After being assigned a task, to get complete requirements
+
+## Output
+
+Returns full task details:
+- **subject**: Task title
+- **description**: Detailed requirements and context
+- **status**: 'pending', 'in_progress', or 'completed'
+- **blocks**: Tasks waiting on this one to complete
+- **blockedBy**: Tasks that must complete before this one can start
+
+## Tips
+
+- After fetching a task, verify its blockedBy list is empty before beginning work.
+- Use TaskList to see all tasks in summary form.
+`;var js=f(()=>Ge({taskId:o().describe("The ID of the task to retrieve")})),Ws=f(()=>u({task:u({id:o(),subject:o(),description:o(),status:Lxe(),blocks:C(o()),blockedBy:C(o())}).nullable()})),yr=Gt({name:r8,searchHint:"retrieve a task by ID",backgrounding:"never",maxResultSizeChars:1e5,async description(){return hr},async prompt(){return gr},get inputSchema(){return js()},get outputSchema(){return Ws()},userFacingName(){return"TaskGet"},shouldDefer:!0,isEnabled(){return a7()},isConcurrencySafe(){return!0},isReadOnly(){return!0},toAutoClassifierInput(e){return e.taskId},renderToolUseMessage(){return null},create({storageV5:e}){return{async call({taskId:r}){let n=jv(),s=await O4(n,r,e);if(!s)return{data:{task:null}};return{data:{task:{id:s.id,subject:s.subject,description:s.description,status:s.status,blocks:s.blocks,blockedBy:s.blockedBy}}}}}},mapToolResultToToolResultBlockParam(e,r){let{task:n}=e;if(!n)return{tool_use_id:r,type:"tool_result",content:"Task not found"};let s=[`Task #${n.id}: ${n.subject}`,`Status: ${n.status}`,`Description: ${n.description}`];if(n.blockedBy.length>0)s.push(`Blocked by: ${n.blockedBy.map((p)=>`#${p}`).join(", ")}`);if(n.blocks.length>0)s.push(`Blocks: ${n.blocks.map((p)=>`#${p}`).join(", ")}`);return{tool_use_id:r,type:"tool_result",content:s.join(`
+`)}}});var kr="Update a task in the task list",Tr=`Use this tool to update a task in the task list.
+
+## When to Use This Tool
+
+**Mark tasks as resolved:**
+- When you have completed the work described in a task
+- When a task is no longer needed or has been superseded
+- IMPORTANT: Always mark your assigned tasks as resolved when you finish them
+- After resolving, call TaskList to find your next task
+
+- ONLY mark a task as completed when you have FULLY accomplished it
+- If you encounter errors, blockers, or cannot finish, keep the task as in_progress
+- When blocked, create a new task describing what needs to be resolved
+- Never mark a task as completed if:
+  - Tests are failing
+  - Implementation is partial
+  - You encountered unresolved errors
+  - You couldn't find necessary files or dependencies
+
+**Delete tasks:**
+- When a task is no longer relevant or was created in error
+- Setting status to \`deleted\` permanently removes the task
+
+**Update task details:**
+- When requirements change or become clearer
+- When establishing dependencies between tasks
+
+## Fields You Can Update
+
+- **status**: The task status (see Status Workflow below)
+- **subject**: Change the task title (imperative form, e.g., "Run tests")
+- **description**: Change the task description
+- **activeForm**: Present continuous form shown in spinner when in_progress (e.g., "Running tests")
+- **owner**: Change the task owner (agent name)
+- **metadata**: Merge metadata keys into the task (set a key to null to delete it)
+- **addBlocks**: Mark tasks that cannot start until this one completes
+- **addBlockedBy**: Mark tasks that must complete before this one can start
+
+## Status Workflow
+
+Status progresses: \`pending\` \u2192 \`in_progress\` \u2192 \`completed\`
+
+Use \`deleted\` to permanently remove a task.
+
+## Staleness
+
+Make sure to read a task's latest state using \`TaskGet\` before updating it.
+
+## Examples
+
+Mark task as in progress when starting work:
+\`\`\`json
+{"taskId": "1", "status": "in_progress"}
+\`\`\`
+
+Mark task as completed after finishing work:
+\`\`\`json
+{"taskId": "1", "status": "completed"}
+\`\`\`
+
+Delete a task:
+\`\`\`json
+{"taskId": "1", "status": "deleted"}
+\`\`\`
+
+Claim a task by setting owner:
+\`\`\`json
+{"taskId": "1", "owner": "my-name"}
+\`\`\`
+
+Set up task dependencies:
+\`\`\`json
+{"taskId": "2", "addBlockedBy": ["1"]}
+\`\`\`
+`;var Us=f(()=>{let e=Lxe().or(R("deleted"));return Ge({taskId:o().describe("The ID of the task to update"),subject:o().optional().describe("New subject for the task"),description:o().optional().describe("New description for the task"),activeForm:o().optional().describe('Present continuous form shown in spinner when in_progress (e.g., "Running tests")'),status:e.optional().describe("New status for the task"),addBlocks:C(o()).optional().describe("Task IDs that this task blocks"),addBlockedBy:C(o()).optional().describe("Task IDs that block this task"),owner:o().optional().describe("New owner for the task"),metadata:ue(o(),ie()).optional().describe("Metadata keys to merge into the task. Set a key to null to delete it.")})}),qs=f(()=>u({success:M(),taskId:o(),updatedFields:C(o()),error:o().optional(),statusChange:u({from:o(),to:o()}).optional()})),br=Gt({name:Qk,searchHint:"update a task",backgrounding:"never",maxResultSizeChars:1e5,async description(){return kr},async prompt(){return Tr},get inputSchema(){return Us()},get outputSchema(){return qs()},userFacingName(){return"TaskUpdate"},coerceInput:RYe,shouldDefer:!0,isEnabled(){return a7()},isConcurrencySafe(){return!0},
+--- METHOD ---
+toAutoClassifierInput(e){let r=RYe(e)?.input??e,n=[r.taskId];if(r.status)n.push(r.status);if(r.subject)n.push(r.subject);return n.join(" ")}
+

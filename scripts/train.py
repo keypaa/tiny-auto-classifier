@@ -62,11 +62,12 @@ def main():
 
 
 def _write_tmp_cfg(cfg: TrainingConfig, base: str) -> str:
-    import tempfile, yaml, dataclasses
+    import tempfile
+    import yaml
+    import dataclasses
 
     tmp = tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False)
     # dataclasses.asdict handles nested
-    import dataclasses
 
     d = dataclasses.asdict(cfg)
     yaml.safe_dump(d, tmp)
