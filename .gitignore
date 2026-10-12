@@ -18,3 +18,10 @@ bore
 
 # conversation exports (may contain live secrets; never commit)
 data/import/
+
+# generated corpora (regenerable; kept local only)
+samples/corpus-10k.json
+data/train/pilot_10k.jsonl
+data/validation/pilot_10k.jsonl
+data/test/pilot_10k.jsonl
+data/adversarial/pilot_10k.jsonl
